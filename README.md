@@ -7,6 +7,7 @@ PDF-CV is a Platform as a Service (PaaS) application that analyzes keywords with
 To get started with PDF-CV, follow these steps:
 
 1. **Clone the Repository:**
+
    ```bash
    git clone https://github.com/kvnbbg/pdf-cv.git
    cd pdf-cv
@@ -21,12 +22,14 @@ To get started with PDF-CV, follow these steps:
 
 3. **Configure Environment Variables:**
    Create a `.env` file in the root directory with the following variables:
+
    ```
    PDFCV_SECRET_KEY=your-secret-key
    PDFCV_DATABASE_URL=sqlite:///pdfcv.db
    ```
 
 4. **Run the Application:**
+
    ```bash
    expo start
    ```

@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Kvnbbg/pdf-cv#readme",
   "dependencies": {
+    "expo": "^50.0.14",
     "react-native-element": "^1.2.1",
     "react-native-elements": "^3.4.3"
   }
