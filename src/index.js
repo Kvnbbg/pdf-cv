@@ -1,8 +1,22 @@
-import { registerRootComponent } from 'expo';
-
+import { AppRegistry } from 'react-native';
 import App from './App';
+import { name as appName } from './app.json';
+import { generatePDF } from './pdfGenerator';
 
-// registerRootComponent calls AppRegistry.registerComponent('main', () => App);
-// It also ensures that whether you load the app in Expo Go or in a native build,
-// the environment is set up appropriately
-registerRootComponent(App);
+// Register the app component for both native and web
+AppRegistry.registerComponent(pdf-cv, () => App);
+
+// This ensures the app's entry point is correct for web
+if (typeof document !== 'undefined') {
+  AppRegistry.runApplication(pdf-cv, {
+    initialProps: {},
+    rootTag: document.getElementById('app-root'),
+  });
+}
+// Generate a PDF file from the React Native app
+
+// Call the generatePDF function with the desired options
+generatePDF(pdf-cv, {
+    initialProps: {},
+    rootTag: document.getElementById('app-root'),
+});
