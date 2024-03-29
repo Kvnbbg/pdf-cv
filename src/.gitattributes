@@ -1,1 +1,14 @@
 *.pbxproj -text
+*.jar filter=lfs diff=lfs merge=lfs -text
+android-studio/lib/app.jar filter=lfs diff=lfs merge=lfs -text
+android-studio/lib/lib.jar filter=lfs diff=lfs merge=lfs -text
+android-studio/plugins/android-ndk/resources/lldb/lib64/liblldb.so filter=lfs diff=lfs merge=lfs -text
+android-studio/plugins/Kotlin/lib/kotlin-plugin.jar filter=lfs diff=lfs merge=lfs -text
+android-studio/plugins/gradle/lib/gradle-api-impldep-8.2.jar filter=lfs diff=lfs merge=lfs -text
+android-studio/plugins/java/lib/java-impl.jar filter=lfs diff=lfs merge=lfs -text
+android-studio/lib/util-8.jar filter=lfs diff=lfs merge=lfs -text
+android-studio/plugins/android/lib/android.jar filter=lfs diff=lfs merge=lfs -text
+android-studio/plugins/c-clangd-plugin/bin/clang/linux/x64/clangd filter=lfs diff=lfs merge=lfs -text
+android-studio/plugins/Kotlin/kotlinc/lib/kotlin-compiler.jar filter=lfs diff=lfs merge=lfs -text
+android-studio/plugins/gradle/lib/gradle-api-8.2.jar filter=lfs diff=lfs merge=lfs -text
+android-studio/jbr/lib/modules filter=lfs diff=lfs merge=lfs -text
