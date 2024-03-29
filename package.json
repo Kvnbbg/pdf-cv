@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/Kvnbbg/pdf-cv/issues"
   },
-  "homepage": "https://github.com/Kvnbbg/pdf-cv#readme"
+  "homepage": "https://github.com/Kvnbbg/pdf-cv#readme",
+  "dependencies": {
+    "react-native-element": "^1.2.1",
+    "react-native-elements": "^3.4.3"
+  }
 }
