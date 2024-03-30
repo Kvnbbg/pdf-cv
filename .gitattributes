@@ -1,2 +1,4 @@
 *.jar filter=lfs diff=lfs merge=lfs -text
+android-studio/lib/app.jar filter=lfs diff=lfs merge=lfs -text
+android-studio filter=lfs diff=lfs merge=lfs -text
 android-studio/** filter=lfs diff=lfs merge=lfs -text
