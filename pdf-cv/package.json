@@ -2,7 +2,7 @@
   "name": "pdf-cv",
   "version": "1.0.0",
   "private": false,
-  "main": "App.js",
+  "main": "app.js",
   "scripts": {
     "start": "expo start",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
@@ -27,13 +27,19 @@
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "eslint": "^7.32.0",
-    "prettier": "^2.3.2",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-prettier": "^3.4.0"
+    "eslint-plugin-prettier": "^3.4.0",
+    "prettier": "^2.3.2"
   },
   "eslintConfig": {
-    "extends": ["eslint:recommended", "plugin:react/recommended", "prettier"],
-    "plugins": ["prettier"],
+    "extends": [
+      "eslint:recommended",
+      "plugin:react/recommended",
+      "prettier"
+    ],
+    "plugins": [
+      "prettier"
+    ],
     "parserOptions": {
       "ecmaFeatures": {
         "jsx": true
