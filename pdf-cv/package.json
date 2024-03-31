@@ -1,12 +1,22 @@
 {
   "name": "pdf-cv",
   "version": "1.0.0",
-  "main": "node_modules/expo/AppEntry.js",
+  "private": false,
+  "main": "App.js",
   "scripts": {
     "start": "expo start",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "eject": "expo eject",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "build": "expo build:web",
+    "deploy": "gh-pages -d web-build",
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "format:fix": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
+    "predeploy": "npm run build"
   },
   "dependencies": {
     "expo": "~50.0.14",
@@ -15,7 +25,33 @@
     "react-native": "0.73.6"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "eslint": "^7.32.0",
+    "prettier": "^2.3.2",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0"
   },
-  "private": true
+  "eslintConfig": {
+    "extends": ["eslint:recommended", "plugin:react/recommended", "prettier"],
+    "plugins": ["prettier"],
+    "parserOptions": {
+      "ecmaFeatures": {
+        "jsx": true
+      },
+      "ecmaVersion": 2020,
+      "sourceType": "module"
+    },
+    "rules": {
+      "prettier/prettier": "error"
+    },
+    "settings": {
+      "react": {
+        "version": "detect"
+      }
+    }
+  },
+  "prettier": {
+    "semi": true,
+    "singleQuote": true
+  }
 }
