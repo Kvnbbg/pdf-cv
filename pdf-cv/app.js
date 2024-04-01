@@ -7,92 +7,83 @@ import {
   SafeAreaView,
   ScrollView,
   ActivityIndicator,
-  TextInput,
+  Image,
   StatusBar,
 } from 'react-native';
-import { DocumentPicker } from 'react-native-document-picker';
-import LottieView from 'lottie-react-native';
+import * as DocumentPicker from 'expo-document-picker';
+import LottieView from 'lottie-react-native'; // Ensure you have lottie-react-native installed
 
 export default function App() {
-  const [inputText, setInputText] = useState('');
-  const [keywords, setKeywords] = useState([]);
-  const [pdfQuality, setPdfQuality] = useState(0);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [pdf, setPdf] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [stars, setStars] = useState(0);
 
-  const handleSelectPdf = async () => {
-    try {
-      const res = await DocumentPicker.pick({
-        type: [DocumentPicker.types.pdf],
-      });
-      setSelectedPdf(res);
-      processPdfForKeywords(res.uri); // Assuming processPdfForKeywords accepts a file URI
-    } catch (err) {
-      if (DocumentPicker.isCancel(err)) {
-        // User canceled the picker
-      } else {
-        throw err;
-      }
-    }
+  const pickDocument = async () => {
+    let result = await DocumentPicker.getDocumentAsync({});
+    setPdf(result.uri);
   };
 
-  const processPdfForKeywords = async (pdfUri) => {
-    setIsProcessing(true);
-    // Simulate PDF processing delay
+  const uploadAndAnalyze = async () => {
+    setUploading(true);
+    // Here, add your actual upload and analyze logic and replace the mock code
     setTimeout(() => {
-      setKeywords(['keyword1', 'keyword2', 'keyword3']); // Replace with actual API call
-      setIsProcessing(false);
-      // Simulate getting quality
-      setPdfQuality(5); // Replace with actual AI-driven analysis
+      setStars(5); // This is mock data; replace with actual analysis result
+      setUploading(false);
     }, 2000);
+  };
+
+  const getStarEmoji = () => {
+    return "⭐".repeat(stars); // Returning stars as string of emojis
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.scrollView}>
         <View style={styles.header}>
-          <Text style={styles.headerText}>PDF Keyword Analyzer</Text>
+          <Text style={styles.headerText}>PDF CV Analyzer</Text>
         </View>
         <View style={styles.content}>
-          <Button title="Select PDF" onPress={handleSelectPdf} />
-          {isProcessing && (
+          <Button title="Upload CV" onPress={pickDocument} />
+          {uploading && (
             <>
               <ActivityIndicator size="large" color="#0000ff" />
-              <LottieView source={require('./path-to-animation.json')} autoPlay loop />
-            </>
-          )}
-          {!isProcessing && keywords.length > 0 && (
-            <>
-              <Text>Extracted Keywords: {keywords.join(', ')}</Text>
-              <TextInput
-                style={styles.input}
-                onChangeText={setInputText}
-                value={inputText}
-                placeholder="Enter search refinement"
+              {/* Ensure you have the animation JSON file in your assets */}
+              <LottieView 
+                source={require('./path-to-your-lottie-animation.json')} 
+                autoPlay 
+                loop 
               />
-              <Button title="Refine Search" onPress={() => {}} /> {/* Implement this function */}
-              <Text>PDF Quality: {'★'.repeat(pdfQuality)}</Text>
             </>
           )}
+          {!uploading && stars > 0 && (
+            <>
+              <Text style={styles.resultText}>CV Quality:</Text>
+              <Text style={styles.stars}>{getStarEmoji()}</Text>
+            </>
+          )}
+          {pdf && !uploading && (
+            <Button title="Analyze CV" onPress={uploadAndAnalyze} />
+          )}
+          {pdf && (
+            <Image
+              source={{ uri: pdf }}
+              style={styles.imagePreview}
+            />
+          )}
         </View>
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>Select a PDF to begin</Text>
-        </View>
+        <StatusBar style="auto" />
       </ScrollView>
-      <StatusBar style="auto" />
     </SafeAreaView>
   );
 }
-
-// Styles go below...
-
 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: '#f0f0f0',
   },
-  flexGrow: {
-    flexGrow: 1,
+  scrollView: {
+    backgroundColor: '#fff',
   },
   header: {
     height: 60,
@@ -105,33 +96,23 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
   },
-  scrollView: {
-    backgroundColor: '#fff',
-    marginHorizontal: 20,
-    flex: 1,
-  },
   content: {
     alignItems: 'center',
-    marginTop: 20,
-  },
-  input: {
-    height: 40,
-    width: '80%',
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginTop: 10,
-    marginBottom: 10,
-    padding: 10,
-  },
-  footer: {
-    height: 60,
-    backgroundColor: '#007bff',
-    alignItems: 'center',
     justifyContent: 'center',
+    padding: 20,
   },
-  footerText: {
-    color: '#fff',
-    fontSize: 20,
-    fontWeight: 'bold',
+  resultText: {
+    fontSize: 24,
+    marginVertical: 10,
+  },
+  stars: {
+    fontSize: 30,
+    color: '#ffd700',
+  },
+  imagePreview: {
+    width: 150,
+    height: 150,
+    resizeMode: 'contain',
+    marginVertical: 20,
   },
 });
