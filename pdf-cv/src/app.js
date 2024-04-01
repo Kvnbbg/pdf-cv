@@ -52,12 +52,20 @@ export default function App() {
           {uploading ? (
             <>
               <ActivityIndicator size="large" color="#0000ff" />
-              <LottieView source={require('/assets/path-to-animation.json')} autoPlay loop />
+              <LottieView
+                source={require('/assets/path-to-animation.json')}
+                autoPlay
+                loop
+              />
             </>
           ) : (
             <>
               {pdf && <Button title="Analyze CV" onPress={uploadAndAnalyze} />}
-              {stars > 0 && <Text style={styles.resultText}>CV Quality: {getStarEmoji()}</Text>}
+              {stars > 0 && (
+                <Text style={styles.resultText}>
+                  CV Quality: {getStarEmoji()}
+                </Text>
+              )}
             </>
           )}
         </View>
