@@ -33,7 +33,7 @@ export default function App() {
   };
 
   const getStarEmoji = () => {
-    return "⭐".repeat(stars); // Returning stars as string of emojis
+    return '⭐'.repeat(stars); // Returning stars as string of emojis
   };
 
   return (
@@ -48,10 +48,10 @@ export default function App() {
             <>
               <ActivityIndicator size="large" color="#0000ff" />
               {/* Ensure you have the animation JSON file in your assets */}
-              <LottieView 
-                source={require('./path-to-your-lottie-animation.json')} 
-                autoPlay 
-                loop 
+              <LottieView
+                source={require('./path-to-your-lottie-animation.json')}
+                autoPlay
+                loop
               />
             </>
           )}
@@ -64,12 +64,7 @@ export default function App() {
           {pdf && !uploading && (
             <Button title="Analyze CV" onPress={uploadAndAnalyze} />
           )}
-          {pdf && (
-            <Image
-              source={{ uri: pdf }}
-              style={styles.imagePreview}
-            />
-          )}
+          {pdf && <Image source={{ uri: pdf }} style={styles.imagePreview} />}
         </View>
         <StatusBar style="auto" />
       </ScrollView>
