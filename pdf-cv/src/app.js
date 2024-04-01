@@ -52,7 +52,7 @@ export default function App() {
           {uploading ? (
             <>
               <ActivityIndicator size="large" color="#0000ff" />
-              <LottieView source={require('./path-to-animation.json')} autoPlay loop />
+              <LottieView source={require('/assets/path-to-animation.json')} autoPlay loop />
             </>
           ) : (
             <>
