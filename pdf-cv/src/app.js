@@ -78,7 +78,7 @@ export default function App() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#f0f0f0', // Light gray backgroundColor for SafeAreaView
   },
   scrollView: {
     backgroundColor: '#fff',
