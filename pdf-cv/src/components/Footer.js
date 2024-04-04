@@ -5,7 +5,9 @@ const Footer = () => {
   return (
     <footer className="footer mt-auto py-3 bg-light">
       <Container className="text-center">
-        <span className="text-muted">© 2024 Your Company. All rights reserved.</span>
+        <span className="text-muted">
+          © 2024 Your Company. All rights reserved.
+        </span>
       </Container>
     </footer>
   );

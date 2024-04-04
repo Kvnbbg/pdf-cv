@@ -46,7 +46,10 @@ const UserProfile = ({ name, initialAge = 25 }) => {
           value={age.toString()}
           onChangeText={(text) => setAge(Number(text))}
         />
-        <Button title="Update Profile" onPress={() => console.log("Profile Updated")} />
+        <Button
+          title="Update Profile"
+          onPress={() => console.log('Profile Updated')}
+        />
       </Card>
     </View>
   );
