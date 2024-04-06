@@ -1,13 +1,17 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import {AppRegistry} from 'react-native';
+import { AppRegistry, Platform } from 'react-native';
 import App from './pdf-cv/src/app';
-import {name as main} from './app.json';
+import { name as appName } from './app.json';
 
-AppRegistry.registerComponent(main, () => App);
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('app-root')
-);
+// Register for React Native
+AppRegistry.registerComponent(appName, () => App);
+
+// Specific setup for web platform
+if (Platform.OS === 'web') {
+  const ReactDOM = require('react-dom');
+
+  // Define the 'root' div in your web/index.html
+  const rootTag = document.getElementById('app-root') || document.getElementById('root');
+
+  ReactDOM.render(<App />, rootTag);
+}
