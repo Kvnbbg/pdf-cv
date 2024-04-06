@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "PDF CV",
+    "description": "Create a PDF CV with React Native",
     "slug": "pdf-cv",
     "version": "1.0.0",
     "orientation": "portrait",
