@@ -53,7 +53,7 @@ export default function App() {
             <>
               <ActivityIndicator size="large" color="#0000ff" />
               <LottieView
-                source={require('./src/assets/lottie-animation.json')}
+                source={require('./assets/lottie-animation.json')} // Add your Lottie animation file npm install lottie-web
                 autoPlay
                 loop
               />
