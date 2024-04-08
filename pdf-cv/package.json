@@ -2,7 +2,7 @@
   "name": "pdf-cv",
   "version": "1.0.0",
   "private": false,
-  "main": "/src/app.js",
+  "main": "./src/app.js",
   "scripts": {
     "start": "expo start",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",

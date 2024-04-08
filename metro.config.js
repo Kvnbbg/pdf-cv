@@ -13,7 +13,7 @@ module.exports = (async () => {
       experimentalImportSupport: false,
       inlineRequires: true, // Improve startup time
       // Apply custom transformations if necessary
-      babelTransformerPath: require.resolve('./custom-transformer'),
+      babelTransformerPath: require.resolve('custom-transformer'),
     },
     resolver: {
       // Define additional asset extensions

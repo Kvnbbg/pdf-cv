@@ -1,5 +1,5 @@
 {
-  "main": "src/app.js",
+  "main": "./src/app.js",
   "expo": {
     "name": "PDF CV",
     "description": "Create a PDF CV with React Native",
