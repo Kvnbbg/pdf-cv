@@ -1,24 +1,30 @@
-const { getDefaultConfig } = require('metro-config');
-const exclusionList = require('metro-config/src/defaults/exclusionList');
-const path = require('path');
+// metro.config.js
+const { getDefaultConfig } = require('@expo/metro-config');
+const setupMetro = require('./setup-metro');
 
 module.exports = (async () => {
+  // Execute any setup logic from setup-metro.js
+  await setupMetro();
+
+  // After setup, proceed with the default Metro configuration
+  const defaultConfig = await getDefaultConfig(__dirname);
   const {
     resolver: { sourceExts, assetExts },
-  } = await getDefaultConfig();
+  } = defaultConfig;
 
   return {
+    ...defaultConfig,
     transformer: {
-      // Enable the experimental new architecture (Fabric)
-      experimentalImportSupport: false,
+      ...defaultConfig.transformer,
+      experimentalImportSupport: false, // Optionally set to true for enabling new JS features
       inlineRequires: true, // Improve startup time
-      // Apply custom transformations if necessary
-      babelTransformerPath: require.resolve('custom-transformer'),
+      // Specify a custom transformer if needed (e.g., for Babel setup)
+      babelTransformerPath: require.resolve('./custom-transformer'), // Adjust path as necessary
     },
     resolver: {
-      // Define additional asset extensions
+      ...defaultConfig.resolver,
+      // Define or extend additional asset and source file extensions
       assetExts: [...assetExts, 'md', 'custom'],
-      // Define additional source file extensions
       sourceExts: [...sourceExts, 'jsx', 'tsx', 'cjs'],
       // Exclude specific directories from the bundler
       blacklistRE: exclusionList([/excluded-folder\/.*/]),
@@ -33,22 +39,20 @@ module.exports = (async () => {
       ),
     },
     server: {
-      // Custom server options
+      ...defaultConfig.server,
+      // Customize server middleware if needed
       enhanceMiddleware: (middleware) => {
-        // Custom middleware for the Metro server
         return (req, res, next) => {
-          // Custom code before passing to the next middleware
           console.log(`Received request for ${req.url}`);
           return middleware(req, res, next);
         };
       },
     },
-    // Direct Metro to watch additional folders outside of the root folder
+    // Specify additional folders for Metro to watch
     watchFolders: [
       path.resolve(__dirname, '../shared'),
       path.resolve(__dirname, '../../node_modules'),
     ],
-    // Custom configuration to reset cache if needed
-    resetCache: false, // Reset the Metro bundler cache
+    resetCache: false, // Optionally reset the Metro bundler cache
   };
 })();
