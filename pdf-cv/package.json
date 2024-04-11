@@ -31,7 +31,9 @@
     "react-native-screens": "~3.22.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.24.1",
     "@babel/core": "^7.20.0",
+    "@babel/preset-react": "^7.24.1",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",

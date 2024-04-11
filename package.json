@@ -1,10 +1,16 @@
 {
-  "name": "package.json",
+  "name": "pdf-cv",
   "version": "1.0.0",
-  "description": "A PaaS that analyzes PDF keywords and transfers the data into a spreadsheet.",
+  "description": "A Platform as a Service (PaaS) that analyzes PDF keywords and transfers the data into a spreadsheet.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ./src --fix",
+    "format": "prettier --write \"./src/**/*.{js,jsx,json,css}\""
   },
   "repository": {
     "type": "git",
@@ -23,18 +29,20 @@
     "expo": "^49.0.23",
     "expo-system-ui": "^2.9.3",
     "lottie-react-native": "^6.7.0",
-    "lottie-web": "^5.12.2",
+    "react": "^18.2.0",
     "react-bootstrap": "^2.10.2",
-    "react-dom": "18.2.0",
-    "react-native-element": "^1.2.1",
+    "react-dom": "^18.2.0",
     "react-native-elements": "^3.4.3",
     "react-native-web": "~0.19.6",
-    "react-router-dom": "^6.22.3",
-    "snack": "^0.1.0",
-    "watchman": "^1.0.0"
+    "react-router-dom": "^6.22.3"
   },
   "devDependencies": {
+    "@babel/core": "^7.24.4",
+    "@babel/plugin-transform-runtime": "^7.24.3",
+    "@babel/preset-env": "^7.24.4",
+    "@babel/preset-react": "^7.24.1",
+    "babel-preset-expo": "^10.0.1",
     "eslint": "^8.57.0",
-    "prettier": "3.2.5"
+    "prettier": "^3.2.5"
   }
 }
