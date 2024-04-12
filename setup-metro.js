@@ -4,6 +4,7 @@ const path = require('path');
 const { execSync } = require('child_process');
 const { getDefaultConfig } = require('@expo/metro-config');
 const exclusionList = require('metro-config/src/defaults/exclusionList');
+const Metro = require('metro');
 
 // Ensure necessary packages are installed
 function ensureDependencies() {
@@ -83,6 +84,8 @@ if (require.main === module) {
   setupMetro().then(config => {
     console.log("Metro setup completed.");
     // You can use the 'config' variable to start Metro with custom configuration
+    // Start Metro with custom configuration
+    Metro.runBuild(config);
   }).catch(error => {
     console.error("Failed to setup Metro:", error);
   });

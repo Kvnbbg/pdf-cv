@@ -1,31 +1,27 @@
 // metro.config.js
 const { getDefaultConfig } = require('@expo/metro-config');
 const setupMetro = require('./setup-metro');
+const { getDefaultConfig } = require('@expo/metro-config');
 
 module.exports = (async () => {
   // Execute any setup logic from setup-metro.js
   await setupMetro();
+  // Add any additional configuration here
 
-  // After setup, proceed with the default Metro configuration
+  // For example, to enable TypeScript support:
   const defaultConfig = await getDefaultConfig(__dirname);
   const {
-    resolver: { sourceExts, assetExts },
+    resolver: { sourceExts },
   } = defaultConfig;
+
 
   return {
     ...defaultConfig,
-    transformer: {
-      ...defaultConfig.transformer,
-      experimentalImportSupport: false, // Optionally set to true for enabling new JS features
-      inlineRequires: true, // Improve startup time
-      // Specify a custom transformer if needed (e.g., for Babel setup)
-      babelTransformerPath: require.resolve('./custom-transformer'), // Adjust path as necessary
-    },
     resolver: {
       ...defaultConfig.resolver,
-      // Define or extend additional asset and source file extensions
-      assetExts: [...assetExts, 'md', 'custom'],
-      sourceExts: [...sourceExts, 'jsx', 'tsx', 'cjs'],
+      sourceExts: [...sourceExts, 'ts', 'tsx'],
+    },
+  };
       // Exclude specific directories from the bundler
       blacklistRE: exclusionList([/excluded-folder\/.*/]),
       // Additional module resolve settings, like aliases

@@ -13,5 +13,6 @@ if (Platform.OS === 'web') {
   // Define the 'root' div in your web/index.html
   const rootTag = document.getElementById('app-root') || document.getElementById('root');
 
+
   ReactDOM.render(<App />, rootTag);
 }
