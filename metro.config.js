@@ -1,7 +1,6 @@
 // metro.config.js
 const { getDefaultConfig } = require('@expo/metro-config');
 const setupMetro = require('./setup-metro');
-const { getDefaultConfig } = require('@expo/metro-config');
 
 module.exports = (async () => {
   // Execute any setup logic from setup-metro.js
@@ -14,25 +13,15 @@ module.exports = (async () => {
     resolver: { sourceExts },
   } = defaultConfig;
 
-
   return {
     ...defaultConfig,
+    transformer: {
+      ...defaultConfig.transformer,
+      babelTransformerPath: require.resolve('./custom-transformer'),
+    },
     resolver: {
       ...defaultConfig.resolver,
       sourceExts: [...sourceExts, 'ts', 'tsx'],
-    },
-  };
-      // Exclude specific directories from the bundler
-      blacklistRE: exclusionList([/excluded-folder\/.*/]),
-      // Additional module resolve settings, like aliases
-      extraNodeModules: new Proxy(
-        {},
-        {
-          get: (target, name) =>
-            // Redirects dependencies referenced from the root folder to local node_modules
-            path.join(process.cwd(), `node_modules/${name}`),
-        }
-      ),
     },
     server: {
       ...defaultConfig.server,

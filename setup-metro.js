@@ -4,9 +4,8 @@ const path = require('path');
 const { execSync } = require('child_process');
 const { getDefaultConfig } = require('@expo/metro-config');
 const exclusionList = require('metro-config/src/defaults/exclusionList');
-const Metro = require('metro');
 
-// Ensure necessary packages are installed
+// Function to ensure necessary packages are installed
 function ensureDependencies() {
   const requiredPackages = [
     '@babel/core',
@@ -14,14 +13,12 @@ function ensureDependencies() {
     '@babel/preset-env',
     '@babel/preset-react',
     '@babel/plugin-transform-runtime',
-    // Add other packages as necessary
+    // Additional packages can be added here
   ];
 
   console.log("Checking for required packages...");
   requiredPackages.forEach(packageName => {
-    try {
-      require.resolve(packageName);
-    } catch (e) {
+    if (!checkPackageInstalled(packageName)) {
       console.log(`Installing ${packageName}...`);
       execSync(`npm install --save-dev ${packageName}`, { stdio: 'inherit' });
     }
@@ -29,12 +26,22 @@ function ensureDependencies() {
   console.log("All required packages are installed.");
 }
 
-// Automatically update Babel configuration if needed
+// Helper function to check if a package is installed
+function checkPackageInstalled(packageName) {
+  try {
+    require.resolve(packageName);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+// Function to update Babel configuration
 function updateBabelConfig() {
   const babelConfigPath = path.join(process.cwd(), '.babelrc');
   const babelConfig = {
-    "presets": ["@babel/preset-env", "@babel/preset-react"],
-    "plugins": ["@babel/plugin-transform-runtime"]
+    presets: ["@babel/preset-env", "@babel/preset-react"],
+    plugins: ["@babel/plugin-transform-runtime"]
   };
 
   console.log("Updating Babel configuration...");
@@ -42,20 +49,25 @@ function updateBabelConfig() {
   console.log("Babel configuration updated.");
 }
 
+// Main function to set up Metro configuration
 async function setupMetro() {
   ensureDependencies();
   updateBabelConfig();
 
-  const { resolver: { sourceExts, assetExts } } = await getDefaultConfig();
+  const config = await getDefaultConfig();
+  const { resolver: { sourceExts, assetExts } } = config;
 
+  // Override the Metro configuration as needed
   return {
+    ...config,
     transformer: {
+      ...config.transformer,
       experimentalImportSupport: false,
       inlineRequires: true,
-      // Ensure 'custom-transformer' is installed and provide its path
       babelTransformerPath: require.resolve('./custom-transformer'),
     },
     resolver: {
+      ...config.resolver,
       assetExts: [...assetExts, 'md', 'custom'],
       sourceExts: [...sourceExts, 'jsx', 'tsx', 'cjs'],
       blacklistRE: exclusionList([/excluded-folder\/.*/]),
@@ -64,6 +76,7 @@ async function setupMetro() {
       }),
     },
     server: {
+      ...config.server,
       enhanceMiddleware: (middleware) => {
         return (req, res, next) => {
           console.log(`Received request for ${req.url}`);
@@ -79,13 +92,10 @@ async function setupMetro() {
   };
 }
 
-// Automatically run setup when this script is called directly
+// Automatically run setup when this script is executed directly
 if (require.main === module) {
   setupMetro().then(config => {
-    console.log("Metro setup completed.");
-    // You can use the 'config' variable to start Metro with custom configuration
-    // Start Metro with custom configuration
-    Metro.runBuild(config);
+    console.log("Metro setup completed with the following configuration:", config);
   }).catch(error => {
     console.error("Failed to setup Metro:", error);
   });
