@@ -1,5 +1,7 @@
 # PDF-CV App 📄
 
+![image](STUDI/image.svg)
+
 This PDF-CV app allows users to create high-quality, customized professional CVs in PDF format. It offers a user-friendly interface and a variety of templates to choose from.
 
 ![screenshot](STUDI/screenshot.png)
