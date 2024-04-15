@@ -55,7 +55,7 @@ This PDF-CV app allows users to create high-quality, customized professional CVs
 - [Contributing](#contributing)
 - [License](#license)
 
-## Installation 💻
+## Installation
 
 To install the PDF-CV app, follow these steps:
 
@@ -63,7 +63,7 @@ To install the PDF-CV app, follow these steps:
 2. Navigate to the project directory: `cd pdf-cv`
 3. Install the dependencies: `npm install`
 
-## Usage 📊
+## Usage
 
 To use the PDF-CV app, follow these steps:
 
@@ -71,7 +71,7 @@ To use the PDF-CV app, follow these steps:
 2. Open your web browser and navigate to `http://localhost:3000`
 3. Upload your CV and explore the features.
 
-## Contributing 🤝
+## Contributing
 
 We welcome contributions from the community to enhance the PDF-CV app. To contribute, please follow these steps:
 
@@ -81,7 +81,7 @@ We welcome contributions from the community to enhance the PDF-CV app. To contri
 4. Push to the branch: `git push origin feature/your-feature-name`
 5. Submit a pull request.
 
-## License 📜
+## License
 
 The PDF-CV app is distributed under the [Mozilla Public License Version 2.0](https://opensource.org/licenses/MPL-2.0). See the [LICENSE](LICENSE) file for more information.
 
@@ -92,5 +92,3 @@ The STUDI folder contains helpful resources for exam preparation, including:
 - **Study Guide:** STUDI/manuel_utilisateur.pdf
 - **Reference Materials:** STUDI/devis.pdf
 - **Flowcharts & Diagrams:** ![flowchart](STUDI/flowchart.png)
-
-Feel free to explore the STUDI folder to find useful materials that can assist you in your exam preparation.

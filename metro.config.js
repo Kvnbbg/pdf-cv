@@ -7,7 +7,7 @@ module.exports = (async () => {
   await setupMetro();
   // Add any additional configuration here
 
-  ;, For example, to enable TypeScript support:
+  // For example, to enable TypeScript
   const defaultConfig = await getDefaultConfig(__dirname);
   const {
     resolver: { sourceExts },

@@ -4,6 +4,7 @@ const path = require('path');
 const { execSync } = require('child_process');
 const { getDefaultConfig } = require('/metro-config');
 
+
 // Function to ensure necessary packages are installed
 function ensureDependencies() {
   const requiredPackages = [
