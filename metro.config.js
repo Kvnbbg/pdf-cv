@@ -1,5 +1,5 @@
 // metro.config.js
-const { getDefaultConfig } = require('/metro-config');
+const { getDefaultConfig } = require('@expo/metro-config');
 const setupMetro = require('./setup-metro');
 
 module.exports = (async () => {

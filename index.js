@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppRegistry, Platform } from 'react-native';
 import App from './pdf-cv/src/app';
-import { name as appName } from './app.json';
+import { name as appName } from './pdf-cv/app.json';
 
 // Register for React Native
 AppRegistry.registerComponent(appName, () => App);

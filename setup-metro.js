@@ -2,7 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
-const { getDefaultConfig } = require('/metro-config');
+const { getDefaultConfig } = require('@expo/metro-config');
 
 
 // Function to ensure necessary packages are installed
@@ -86,8 +86,7 @@ async function setupMetro() {
       },
     },
     watchFolders: [
-      path.resolve(__dirname, '../shared'),
-      path.resolve(__dirname, '../../node_modules'),
+      path.resolve(__dirname, './node_modules'),
     ],
     resetCache: false,
   };
