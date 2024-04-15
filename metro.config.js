@@ -1,31 +1,25 @@
 // metro.config.js
 const { getDefaultConfig } = require('@expo/metro-config');
-const setupMetro = require('./setup-metro');
 
 module.exports = (async () => {
-  // Execute any setup logic from setup-metro.js
-  await setupMetro();
-  // Add any additional configuration here
-
-  // For example, to enable TypeScript
-  const defaultConfig = await getDefaultConfig(__dirname);
   const {
-    resolver: { sourceExts },
-  } = defaultConfig;
+    resolver: { sourceExts, assetExts },
+    transformer,
+    server,
+    resolver
+   } = await getDefaultConfig(__dirname);
 
   return {
-    ...defaultConfig,
     transformer: {
-      ...defaultConfig.transformer,
+      ...transformer,
       babelTransformerPath: require.resolve('./custom-transformer'),
     },
     resolver: {
-      ...defaultConfig.resolver,
+      ...resolver,
       sourceExts: [...sourceExts, 'ts', 'tsx'],
     },
     server: {
-      ...defaultConfig.server,
-      // Customize server middleware if needed
+      ...server,
       enhanceMiddleware: (middleware) => {
         return (req, res, next) => {
           console.log(`Received request for ${req.url}`);
@@ -33,10 +27,9 @@ module.exports = (async () => {
         };
       },
     },
-    // Specify additional folders for Metro to watch
     watchFolders: [
-      path.resolve(__dirname, './node_modules'),
+      __dirname + '/node_modules'
     ],
-    resetCache: false, // Optionally reset the Metro bundler cache
+    resetCache: false,
   };
 })();
