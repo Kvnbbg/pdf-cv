@@ -1,5 +1,5 @@
 // metro.config.js
-const { getDefaultConfig } = require('@expo/metro-config');
+const { getDefaultConfig } = require('/metro-config');
 const setupMetro = require('./setup-metro');
 
 module.exports = (async () => {
@@ -7,7 +7,7 @@ module.exports = (async () => {
   await setupMetro();
   // Add any additional configuration here
 
-  // For example, to enable TypeScript support:
+  ;, For example, to enable TypeScript support:
   const defaultConfig = await getDefaultConfig(__dirname);
   const {
     resolver: { sourceExts },
@@ -35,8 +35,7 @@ module.exports = (async () => {
     },
     // Specify additional folders for Metro to watch
     watchFolders: [
-      path.resolve(__dirname, '../shared'),
-      path.resolve(__dirname, '../../node_modules'),
+      path.resolve(__dirname, './node_modules'),
     ],
     resetCache: false, // Optionally reset the Metro bundler cache
   };

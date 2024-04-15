@@ -19,6 +19,7 @@
     "predeploy": "npm run build"
   },
   "dependencies": {
+    "@expo/metro-config": "^0.17.6",
     "@react-navigation/native": "^6.1.17",
     "expo": "^49.0.23",
     "expo-document-picker": "~11.5.4",

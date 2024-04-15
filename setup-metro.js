@@ -2,8 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
-const { getDefaultConfig } = require('@expo/metro-config');
-const exclusionList = require('metro-config/src/defaults/exclusionList');
+const { getDefaultConfig } = require('/metro-config');
 
 // Function to ensure necessary packages are installed
 function ensureDependencies() {
@@ -13,6 +12,7 @@ function ensureDependencies() {
     '@babel/preset-env',
     '@babel/preset-react',
     '@babel/plugin-transform-runtime',
+    'metro-config',
     // Additional packages can be added here
   ];
 
