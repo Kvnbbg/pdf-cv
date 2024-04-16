@@ -13,7 +13,7 @@ function ensureDependencies() {
     '@babel/preset-env',
     '@babel/preset-react',
     '@babel/plugin-transform-runtime',
-    'metro-config',
+    '@expo/metro-config',
     // Additional packages can be added here
   ];
 
