@@ -12,7 +12,7 @@ import {
   TextInput,
 } from "react-native";
 import * as DocumentPicker from "expo-document-picker";
-import LottieView from "lottie-react-native";
+// import LottieView from "lottie-react-native";
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -123,11 +123,11 @@ function App() {
             {state.uploading ? (
               <>
                 <ActivityIndicator size="large" color="#0000ff" />
-                <LottieView
-                  source={require("./pdf-cv/src/assets/uploading-animation.json")}
+                {/*<LottieView
+                  source={require("/pdf-cv/src/assets/uploading-animation.json")}
                   autoPlay
                   loop
-                />
+            />*/}
                 <Text>{state.uploadProgress}%</Text>
               </>
             ) : (

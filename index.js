@@ -14,5 +14,5 @@ if (Platform.OS === "web") {
   const rootTag =
     document.getElementById("app-root") || document.getElementById("root");
 
-  ReactDOM.render(<App />, rootTag); // Wrap the rendering of the App component in ReactDOM.render
+  ReactDOM.render(<App />, rootTag);
 }
