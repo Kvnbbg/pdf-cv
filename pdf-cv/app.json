@@ -1,33 +1,31 @@
 {
-  "main": "./pdf-cv/src/app.js",
+  "main": "app.js",
   "expo": {
     "name": "PDF CV",
     "description": "Create a PDF CV with React Native",
     "slug": "pdf-cv",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./pdf-cv/src/assets/icon.png",
+    "icon": "/src/assets/icon.png",
     "userInterfaceStyle": "automatic",
     "privacy": "public",
     "splash": {
-      "image": "./pdf-cv/src/assets/splash.png",
+      "image": "/src/assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.yourdomain.pdfcv"
+      "supportsTablet": true
     },
     "android": {
-      "package": "com.yourdomain.pdfcv",
       "adaptiveIcon": {
-        "foregroundImage": "./pdf-cv/src/assets/adaptive-icon.png",
+        "foregroundImage": "/src/assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       }
     },
     "web": {
-      "favicon": "./pdf-cv/src/assets/favicon.png"
+      "favicon": "/src/assets/favicon.png"
     }
   }
 }
