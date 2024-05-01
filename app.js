@@ -196,4 +196,51 @@ function App() {
   );
 }
 
-// Styles omitted for brevity
+// Styles
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
+  header: {
+    backgroundColor: "#f0f0f0",
+    padding: 20,
+  },
+  headerText: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  content: {
+    padding: 20,
+  },
+  resultText: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  errorText: {
+    fontSize: 20,
+    color: "red",
+  },
+  collapsibleHeader: {
+    padding: 10,
+    backgroundColor: "#f0f0f0",
+    marginTop: 20,
+  },
+  collapsibleContent: {
+    padding: 10,
+    backgroundColor: "#f9f9f9",
+  },
+  form: {
+    marginTop: 20,
+  },
+  formHeader: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 10,
+    marginBottom: 10,
+  },
+});
