@@ -17,8 +17,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 // Import your screens
-import HomeScreen from 'src/screens/HomeScreen';
-import DetailsScreen from 'src/screens/DetailsScreen';
+import HomeScreen from '/pdf-cv/src/screens/HomeScreen';
+import DetailsScreen from '/pdf-cv/src/screens/DetailsScreen';
 
 // Create a stack navigator
 const Stack = createStackNavigator();
