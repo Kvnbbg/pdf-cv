@@ -17,8 +17,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 // Import your screens
-import HomeScreen from './screens/HomeScreen';
-import DetailsScreen from './screens/DetailsScreen';
+import HomeScreen from 'src/screens/HomeScreen';
+import DetailsScreen from 'src/screens/DetailsScreen';
 
 // Create a stack navigator
 const Stack = createStackNavigator();
@@ -124,7 +124,7 @@ function App() {
               <>
                 <ActivityIndicator size="large" color="#0000ff" />
                 <LottieView
-                  source={require("./assets/uploading-animation.json")}
+                  source={require("./pdf-cv/src/assets/uploading-animation.json")}
                   autoPlay
                   loop
                 />
