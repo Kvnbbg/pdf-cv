@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "@expo/react",
+    "name": "App",
     "description": "Create a PDF CV with React Native",
     "slug": "app",
     "version": "1.0.0",
@@ -24,6 +24,7 @@
       }
     },
     "web": {
+      "name": "CV App",
       "favicon": "./src/assets/favicon.png"
     }
   }
