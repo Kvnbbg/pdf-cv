@@ -196,6 +196,7 @@ function App() {
   );
 }
 
+export default App; 
 // Styles
 const styles = StyleSheet.create({
   safeArea: {

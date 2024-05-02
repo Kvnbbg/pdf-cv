@@ -1,6 +1,8 @@
 {
   "expo": {
-    "name": "App",
+    "app": {
+          "name": "PDF CV"
+        },
     "description": "Create a PDF CV with React Native",
     "slug": "app",
     "version": "1.0.0",
