@@ -8,13 +8,13 @@ This PDF-CV app allows users to create high-quality, customized professional CVs
 
 # TO DO
 
-´´´bash
+´
 npm install --save-exact --save-dev esbuild --loader:.js=jsx
 
 npm install react react-dom
 
 npm run build
-´´´
+´
 
 ## Purpose 🎯
 
