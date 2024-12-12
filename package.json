@@ -12,6 +12,11 @@
     "lint": "eslint ./src --fix",
     "format": "prettier --write \"./src/**/*.{js,jsx,json,css}\""
   },
+  {
+  "scripts": {
+    "build": "esbuild app.jsx --bundle --outfile=out.js"
+  }
+}
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Kvnbbg/pdf-cv.git"
