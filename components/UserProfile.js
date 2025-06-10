@@ -1,54 +1,53 @@
-import React, { useState, useEffect } from 'react';
-import { View } from 'react-native';
+import React from 'react';
+import { View, Alert } from 'react-native';
 import { Button, Card, Input, Avatar } from 'react-native-elements';
 
-const UserProfile = ({ name, initialAge = 25 }) => {
-  const [age, setAge] = useState(initialAge);
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
+const UserProfile = ({ firstName, email, contact, dispatch }) => {
+  // useEffect hooks removed for brevity as they are not core to the refactor's goal
 
-  // Equivalent to componentDidMount and componentWillUnmount
-  useEffect(() => {
-    console.log('Component did mount');
-    return () => {
-      console.log('Component will unmount');
-    };
-  }, []);
-
-  // Equivalent to componentDidUpdate for name prop
-  useEffect(() => {
-    console.log('Name has updated:', name);
-  }, [name]);
+  const handleSubmit = () => {
+    const profileData = { firstName, email, contact };
+    console.log('[UserProfile] handleSubmit called. Profile data:', profileData);
+    // Here, you could add validation before dispatching
+    Alert.alert("Profile Submitted", `Name: ${profileData.firstName}\nEmail: ${profileData.email}\nContact: ${profileData.contact}`);
+    // If you had a specific action for submitting/saving profile details:
+    // dispatch({ type: 'SAVE_PROFILE_DETAILS', payload: profileData });
+    // console.log('[UserProfile] Dispatched SAVE_PROFILE_DETAILS (simulated).');
+  };
 
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Avatar
-        rounded
-        size="large"
-        source={{ uri: './assets/user-avatar.jpg' }} // Fixed path
-      />
+    <View style={{ width: '100%' }}> // Ensure Card takes full width of its container
       <Card>
-        <Card.Title>{name}'s Profile</Card.Title>
+        <Card.Title>Personal Details</Card.Title>
         <Card.Divider />
+        <View style={{alignItems: 'center', marginBottom: 10}}>
+          <Avatar
+            rounded
+            size="large"
+            source={require('../pdf-cv/src/assets/user-image.jpg')}
+          />
+        </View>
         <Input
-          placeholder="Username"
-          value={username}
-          onChangeText={setUsername}
+          placeholder="First name"
+          value={firstName}
+          onChangeText={(text) => dispatch({ type: "SET_FIRST_NAME", payload: text })}
         />
         <Input
           placeholder="Email"
           keyboardType="email-address"
           value={email}
-          onChangeText={setEmail}
+          onChangeText={(text) => dispatch({ type: "SET_EMAIL", payload: text })}
         />
         <Input
-          placeholder="Age"
-          value={age.toString()}
-          onChangeText={(text) => setAge(Number(text))}
+          placeholder="Contact"
+          value={contact}
+          onChangeText={(text) => dispatch({ type: "SET_CONTACT", payload: text })}
+          // keyboardType="phone-pad" // Optionally
         />
         <Button
-          title="Update Profile"
-          onPress={() => console.log('Profile Updated')}
+          title="Submit Details"
+          onPress={handleSubmit}
+          // containerStyle={{ marginTop: 10 }}
         />
       </Card>
     </View>
