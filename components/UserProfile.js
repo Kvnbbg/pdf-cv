@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, Alert } from 'react-native';
+import { View, Alert, Text } from 'react-native'; // Added Text for Card.Title
 import { Button, Card, Input, Avatar } from 'react-native-elements';
+import { useTheme } from '../context/ThemeContext'; // Import useTheme
 
 const UserProfile = ({ firstName, email, contact, dispatch }) => {
-  // useEffect hooks removed for brevity as they are not core to the refactor's goal
+  const { theme } = useTheme(); // Consume theme context
 
   const handleSubmit = () => {
     const profileData = { firstName, email, contact };
@@ -16,13 +17,13 @@ const UserProfile = ({ firstName, email, contact, dispatch }) => {
   };
 
   return (
-    <View style={{ width: '100%' }}> // Ensure Card takes full width of its container
-      <Card>
-        <Card.Title>Personal Details</Card.Title>
-        <Card.Divider />
+    <View style={{ width: '100%' }}>
+      <Card containerStyle={{ backgroundColor: theme.CARD_BACKGROUND_COLOR, borderColor: theme.BORDER_COLOR }}>
+        <Card.Title style={{ color: theme.TEXT_COLOR }}>Personal Details</Card.Title>
+        <Card.Divider color={theme.BORDER_COLOR}/>
         <View style={{alignItems: 'center', marginBottom: 10}}>
           <Avatar
-            rounded
+            rounded // Avatar styling might need more specific props for theming if available
             size="large"
             source={require('../pdf-cv/src/assets/user-image.jpg')}
           />
@@ -31,23 +32,30 @@ const UserProfile = ({ firstName, email, contact, dispatch }) => {
           placeholder="First name"
           value={firstName}
           onChangeText={(text) => dispatch({ type: "SET_FIRST_NAME", payload: text })}
+          inputStyle={{ color: theme.TEXT_COLOR }}
+          placeholderTextColor={theme.PLACEHOLDER_TEXT_COLOR}
         />
         <Input
           placeholder="Email"
           keyboardType="email-address"
           value={email}
           onChangeText={(text) => dispatch({ type: "SET_EMAIL", payload: text })}
+          inputStyle={{ color: theme.TEXT_COLOR }}
+          placeholderTextColor={theme.PLACEHOLDER_TEXT_COLOR}
         />
         <Input
           placeholder="Contact"
           value={contact}
           onChangeText={(text) => dispatch({ type: "SET_CONTACT", payload: text })}
+          inputStyle={{ color: theme.TEXT_COLOR }}
+          placeholderTextColor={theme.PLACEHOLDER_TEXT_COLOR}
           // keyboardType="phone-pad" // Optionally
         />
         <Button
           title="Submit Details"
           onPress={handleSubmit}
-          // containerStyle={{ marginTop: 10 }}
+          buttonStyle={{ backgroundColor: theme.PRIMARY_COLOR }}
+          // containerStyle={{ marginTop: 10 }} // Keep if needed
         />
       </Card>
     </View>

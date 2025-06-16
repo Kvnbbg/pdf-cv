@@ -44,7 +44,31 @@ describe('DetailsScreen', () => {
     const tree = render(<DetailsScreen route={mockRoute} navigation={jest.fn()} />).toJSON();
     expect(tree).toMatchSnapshot();
 
-    // Restore original console.warn
     console.warn = originalWarn;
+  });
+
+  // Theme-based snapshot tests
+  it('renders correctly in explicit light mode', () => {
+    const mockRoute = {
+      params: { stars: 4, tips: ['Use action verbs', 'Quantify achievements'] },
+    };
+    const tree = render(
+      <ThemeProvider initialThemeMode="light">
+        <DetailsScreen route={mockRoute} navigation={jest.fn()} />
+      </ThemeProvider>
+    ).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+
+  it('renders correctly in dark mode', () => {
+    const mockRoute = {
+      params: { stars: 4, tips: ['Use action verbs', 'Quantify achievements'] },
+    };
+    const tree = render(
+      <ThemeProvider initialThemeMode="dark">
+        <DetailsScreen route={mockRoute} navigation={jest.fn()} />
+      </ThemeProvider>
+    ).toJSON();
+    expect(tree).toMatchSnapshot();
   });
 });
