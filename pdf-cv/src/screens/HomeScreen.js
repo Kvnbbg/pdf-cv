@@ -105,7 +105,7 @@ const HomeScreen = ({ navigation, state, dispatch }) => {
           {state.uploading ? (
             <View style={styles.loadingContainer}>
               <LottieView
-                source={require('../../pdf-cv/src/assets/uploading-animation.json')} // Corrected path
+                source={require('../assets/uploading-animation.json')} // Corrected path
                 autoPlay
                 loop
                 style={styles.lottieAnimation}
