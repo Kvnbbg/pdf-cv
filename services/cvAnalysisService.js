@@ -47,7 +47,11 @@ const analyzeCv = async (cvUri) => {
     "Review your CV for consistent formatting and check for any typos or grammatical errors.",
     "The 'Skills' section could be enhanced by adding proficiency levels or years of experience for each skill.",
     "If applicable, add a 'Projects' section to showcase practical application of your skills.",
-    "Ensure date ranges for education and work experience are clear and chronologically consistent."
+    "Ensure date ranges for education and work experience are clear and chronologically consistent.",
+    "Les pratiques recommandées — notamment l’utilisation de fichiers CLAUDE.md pour conserver le contexte du projet — valorisent une documentation claire et vivante.",
+    "La touche Échap pour intervenir en temps réel illustre l’importance d’un pilotage proactif et d’ajustements rapides.",
+    "L’usage de sous-agents pour le travail en parallèle met en avant une collaboration structurée et une répartition efficace des tâches.",
+    "Align your workflow with established agentic coding practices by documenting decisions, coordinating parallel workstreams, and keeping context easily accessible."
   ];
 
   // Randomly pick a few tips (Placeholder selection logic)
