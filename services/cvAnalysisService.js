@@ -38,32 +38,20 @@ const analyzeCv = async (cvUri) => {
   // For now, using random generation for stars:
   const randomStars = Math.floor(Math.random() * 5) + 1; // 1 to 5 stars (Placeholder)
 
-  // Refined placeholder tips to be more analytical:
-  const improvementTips = [
-    "Consider quantifying achievements in your experience section with specific numbers (e.g., 'Increased sales by 15%').",
-    "Tailor your CV's skills and experience sections to match the keywords found in the target job description.",
-    "Ensure all sections (Work Experience, Education, Skills) are present and well-detailed.",
-    "Use strong action verbs to begin bullet points in your experience descriptions (e.g., 'Managed', 'Developed', 'Led').",
-    "Review your CV for consistent formatting and check for any typos or grammatical errors.",
-    "The 'Skills' section could be enhanced by adding proficiency levels or years of experience for each skill.",
-    "If applicable, add a 'Projects' section to showcase practical application of your skills.",
-    "Ensure date ranges for education and work experience are clear and chronologically consistent.",
-    "Les pratiques recommandées — notamment l’utilisation de fichiers CLAUDE.md pour conserver le contexte du projet — valorisent une documentation claire et vivante.",
-    "La touche Échap pour intervenir en temps réel illustre l’importance d’un pilotage proactif et d’ajustements rapides.",
-    "L’usage de sous-agents pour le travail en parallèle met en avant une collaboration structurée et une répartition efficace des tâches.",
-    "Align your workflow with established agentic coding practices by documenting decisions, coordinating parallel workstreams, and keeping context easily accessible."
+  // Caviardiseur-focused, ready-to-use guidance (DEY/SMART format).
+  const caviardeurTips = [
+    "Facture psychologue — À CAVIARDER : téléphone + email de la praticienne (encore visibles).",
+    "Facture psychologue — À CAVIARDER : « psychologue clinicienne » (spécialité) + « séance de psychothérapie » (nature des soins).",
+    "Facture psychologue — À LAISSER : votre nom, la date (13/01/2026), le montant (50 €), et éventuellement « Payé » + n° de facture.",
+    "Facture psychologue — SMART : si possible, remplacer « psychothérapie » par « consultation/séance » via une facture reformulée.",
+    "Certificat médical (présence parentale) — À CAVIARDER : l’email du cabinet + le nom/prénom de l’enfant.",
+    "Certificat médical — À LAISSER : la date, la mention « présence du père/de la mère nécessaire », la durée (3 jours à compter du 13/01/2026), signature/cachet.",
+    "Règle d’or — Cache opaque noir (pas gris transparent) pour un caviardage non réversible.",
+    "Export sécurisé — PDF aplati ou image (évite de retirer le cache sur certains documents).",
+    "Ultra strict — caviarder tout le bloc d’en-tête si nécessaire."
   ];
 
-  // Randomly pick a few tips (Placeholder selection logic)
-  const numTips = Math.floor(Math.random() * 3) + 2; // 2 to 4 tips
-  const selectedTips = [];
-  const availableTips = [...improvementTips];
-  for (let i = 0; i < numTips; i++) {
-    if (availableTips.length > 0) {
-      const randomIndex = Math.floor(Math.random() * availableTips.length);
-      selectedTips.push(availableTips.splice(randomIndex, 1)[0]);
-    }
-  }
+  const selectedTips = caviardeurTips;
   // --- End of Placeholder Analysis Logic ---
 
   console.log(`[cvAnalysisService] Analysis generated (placeholder): ${randomStars} stars, Tips: [${selectedTips.join(", ")}]`);
