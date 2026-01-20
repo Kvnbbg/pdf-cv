@@ -51,6 +51,9 @@ npm run build
 - **Comments:** 📖 Descriptive and Insightful
 - **Code Structure:** 🛠️ Modular and Clean
 - **Error Handling:** 🚫 Comprehensive and Robust
+- **UI Refresh:** ✨ Hero layout, insight cards, and step-by-step guidance inspired by modern generator patterns.
+- **Design Tokens:** 🎨 Centralized theme colors for consistent spacing, typography, and surfaces.
+- **Smart Status States:** ✅ Clear upload, progress, and quality feedback blocks.
 
 ## Project Management Tools 🛠️
 

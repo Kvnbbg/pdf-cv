@@ -5,29 +5,47 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export const lightTheme = {
   mode: 'light',
   BACKGROUND_COLOR: '#FFFFFF',
-  TEXT_COLOR: '#000000',
-  PRIMARY_COLOR: '#007AFF', // Blue
-  SECONDARY_COLOR: '#E0E0E0', // Light gray for collapsible headers, etc.
+  TEXT_COLOR: '#0B0B0B',
+  MUTED_TEXT_COLOR: '#5C5C5C',
+  PRIMARY_COLOR: '#007AFF',
+  SECONDARY_COLOR: '#E0E0E0',
+  SECONDARY_SURFACE_COLOR: '#F3F4F7',
   CARD_BACKGROUND_COLOR: '#F9F9F9',
-  BORDER_COLOR: '#CCCCCC',
-  ERROR_TEXT_COLOR: 'red',
-  STAR_COLOR: '#FFC107', // Gold for stars
+  BORDER_COLOR: '#D6D6D6',
+  BUTTON_TEXT_COLOR: '#FFFFFF',
+  ERROR_TEXT_COLOR: '#C62828',
+  ERROR_BACKGROUND_COLOR: '#FDEAEA',
+  ERROR_BORDER_COLOR: '#F8C9C9',
+  STAR_COLOR: '#FFC107',
   HEADER_BACKGROUND_COLOR: '#F0F0F0',
   PLACEHOLDER_TEXT_COLOR: '#A0A0A0',
+  ACCENT_COLOR: '#1BC47D',
+  SUCCESS_BACKGROUND_COLOR: '#E9F8F1',
+  SUCCESS_TEXT_COLOR: '#0F7A4B',
+  SHADOW_COLOR: '#000000',
 };
 
 export const darkTheme = {
   mode: 'dark',
-  BACKGROUND_COLOR: '#121212', // Very dark gray, almost black
-  TEXT_COLOR: '#E0E0E0', // Light gray for text
-  PRIMARY_COLOR: '#0A84FF', // Slightly brighter blue for dark mode
-  SECONDARY_COLOR: '#333333', // Darker gray for collapsible headers
-  CARD_BACKGROUND_COLOR: '#1E1E1E', // Dark gray for cards
-  BORDER_COLOR: '#444444',
-  ERROR_TEXT_COLOR: '#FF6B6B', // Lighter red
-  STAR_COLOR: '#FFD700', // Brighter gold
+  BACKGROUND_COLOR: '#121212',
+  TEXT_COLOR: '#E6E6E6',
+  MUTED_TEXT_COLOR: '#A1A1A1',
+  PRIMARY_COLOR: '#0A84FF',
+  SECONDARY_COLOR: '#333333',
+  SECONDARY_SURFACE_COLOR: '#22272E',
+  CARD_BACKGROUND_COLOR: '#1E1E1E',
+  BORDER_COLOR: '#3A3A3A',
+  BUTTON_TEXT_COLOR: '#FFFFFF',
+  ERROR_TEXT_COLOR: '#FF8A80',
+  ERROR_BACKGROUND_COLOR: '#3A1D1D',
+  ERROR_BORDER_COLOR: '#613131',
+  STAR_COLOR: '#FFD700',
   HEADER_BACKGROUND_COLOR: '#1C1C1C',
   PLACEHOLDER_TEXT_COLOR: '#707070',
+  ACCENT_COLOR: '#2ED57B',
+  SUCCESS_BACKGROUND_COLOR: '#123325',
+  SUCCESS_TEXT_COLOR: '#7BE1AE',
+  SHADOW_COLOR: '#000000',
 };
 
 const THEME_STORAGE_KEY = '@theme_preference';
@@ -35,16 +53,15 @@ const THEME_STORAGE_KEY = '@theme_preference';
 export const ThemeContext = createContext({
   theme: lightTheme,
   toggleTheme: () => {
-    console.log("Default toggleTheme called - Provider not yet initialized?");
+    console.log('Default toggleTheme called - Provider not yet initialized?');
   },
 });
 
-export const ThemeProvider = ({ children, initialThemeMode }) => { // Added initialThemeMode prop
+export const ThemeProvider = ({ children, initialThemeMode }) => {
   const systemColorScheme = useColorScheme();
   const [currentThemeMode, setCurrentThemeMode] = useState(initialThemeMode || systemColorScheme || 'light');
 
   useEffect(() => {
-    // If an initialThemeMode is explicitly passed (e.g., for testing), don't try to load from AsyncStorage or system.
     if (initialThemeMode) {
       setCurrentThemeMode(initialThemeMode);
       return;
@@ -66,7 +83,7 @@ export const ThemeProvider = ({ children, initialThemeMode }) => { // Added init
       }
     };
     loadThemePreference();
-  }, [systemColorScheme, initialThemeMode]); // Add initialThemeMode to dependency array
+  }, [systemColorScheme, initialThemeMode]);
 
   const toggleTheme = async () => {
     const newThemeMode = currentThemeMode === 'light' ? 'dark' : 'light';
@@ -80,17 +97,11 @@ export const ThemeProvider = ({ children, initialThemeMode }) => { // Added init
     }
   };
 
-  // This effect listens to system theme changes if no manual override is set.
-  // However, once a manual override is set, we stick to it.
-  // The current logic prioritizes stored preference over live system changes after first load.
-  // To make it more dynamic with system changes when no manual override exists:
   useEffect(() => {
-    // If initialThemeMode is set, this listener might not be needed or behave differently.
-    // For simplicity in this change, keeping it. It primarily affects non-manual override scenarios.
-    if (initialThemeMode) return; // Don't run this effect if initialThemeMode is provided
+    if (initialThemeMode) return;
 
     const subscription = Appearance.addChangeListener(({ colorScheme }) => {
-      AsyncStorage.getItem(THEME_STORAGE_KEY).then(storedPreference => {
+      AsyncStorage.getItem(THEME_STORAGE_KEY).then((storedPreference) => {
         if (!storedPreference) {
           console.log('[ThemeProvider] System theme changed, no manual override, updating to:', colorScheme);
           setCurrentThemeMode(colorScheme || 'light');
@@ -98,16 +109,11 @@ export const ThemeProvider = ({ children, initialThemeMode }) => { // Added init
       });
     });
     return () => subscription.remove();
-  }, [initialThemeMode]); // Add initialThemeMode to dependency array
-
+  }, [initialThemeMode]);
 
   const theme = currentThemeMode === 'light' ? lightTheme : darkTheme;
 
-  return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>;
 };
 
 export const useTheme = () => useContext(ThemeContext);
