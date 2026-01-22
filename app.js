@@ -1,81 +1,152 @@
 import React, { useReducer } from "react";
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { ThemeProvider } from "./context/ThemeContext"; // Import ThemeProvider
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { ThemeProvider } from "./context/ThemeContext";
+import HomeScreen from "./pdf-cv/src/screens/HomeScreen";
+import DetailsScreen from "./pdf-cv/src/screens/DetailsScreen";
 
-// Import your screens
-import HomeScreen from './pdf-cv/src/screens/HomeScreen'; // Updated path
-import DetailsScreen from './pdf-cv/src/screens/DetailsScreen'; // Updated path
-
-// Create a stack navigator
 const Stack = createStackNavigator();
+const UPLOAD_COMPLETE_PROGRESS = 100;
+const INITIAL_UPLOAD_PROGRESS = 0;
+const DEFAULT_ERROR_MESSAGE = "Upload failed.";
+
+const logger = {
+  info: () => undefined,
+  warn: () => undefined,
+  error: (message, error) => {
+    if (process.env.NODE_ENV === "production") {
+      return;
+    }
+    if (error instanceof Error) {
+      console.error(message, { message: error.message, stack: error.stack });
+      return;
+    }
+    console.error(message, error);
+  },
+};
 
 const initialState = {
   pdf: null,
   uploading: false,
-  uploadProgress: 0,
+  uploadProgress: INITIAL_UPLOAD_PROGRESS,
   stars: 0,
-  tips: [], // Added tips to initial state
+  tips: [],
   errorMessage: "",
   isDetailsOpen: false,
   firstName: "",
   email: "",
   contact: "",
-  analysisStepMessage: "", // Added for granular updates
+  analysisStepMessage: "",
 };
 
-// Removed Greet component and react-dom/server import
+const clampNumber = (value, min, max) => Math.min(Math.max(value, min), max);
+const normalizeTips = (tips) => (Array.isArray(tips) ? tips : []);
 
+/**
+ * Reducer for app-level state updates.
+ * @param {object} state - Current application state.
+ * @param {object} action - Dispatched action with type and payload.
+ * @returns {object} Updated application state.
+ */
 function reducer(state, action) {
-  console.log(`[REDUCER] Action: ${action.type}`, action.payload !== undefined ? action.payload : '');
+  if (!action?.type) {
+    logger.warn("Reducer received an invalid action.", action);
+    return state;
+  }
+
   switch (action.type) {
-    case "SET_PDF":
-      return { ...state, pdf: action.payload, analysisStepMessage: "", errorMessage: "", stars: 0, tips: [] }; // Clear analysis message and results
+    case "SET_PDF": {
+      const pdf = action.payload ?? null;
+      return {
+        ...state,
+        pdf,
+        analysisStepMessage: "",
+        errorMessage: "",
+        stars: 0,
+        tips: [],
+      };
+    }
     case "UPLOAD_START":
-      return { ...state, uploading: true, uploadProgress: 0, errorMessage: "", analysisStepMessage: "Initiating upload..." };
-    case "UPLOAD_PROGRESS":
-      return { ...state, uploadProgress: action.payload };
-    case "SET_ANALYSIS_MESSAGE":
-      return { ...state, analysisStepMessage: action.payload };
-    case "UPLOAD_SUCCESS":
-      console.log("[REDUCER] UPLOAD_SUCCESS: Stars -", action.payload.stars, "Tips -", action.payload.tips ? action.payload.tips.length : 0);
+      return {
+        ...state,
+        uploading: true,
+        uploadProgress: INITIAL_UPLOAD_PROGRESS,
+        errorMessage: "",
+        analysisStepMessage: "Initiating upload...",
+      };
+    case "UPLOAD_PROGRESS": {
+      const progressValue = Number.isFinite(action.payload)
+        ? action.payload
+        : INITIAL_UPLOAD_PROGRESS;
+      return {
+        ...state,
+        uploadProgress: clampNumber(
+          progressValue,
+          INITIAL_UPLOAD_PROGRESS,
+          UPLOAD_COMPLETE_PROGRESS
+        ),
+      };
+    }
+    case "SET_ANALYSIS_MESSAGE": {
+      const message =
+        typeof action.payload === "string" ? action.payload : "";
+      return { ...state, analysisStepMessage: message };
+    }
+    case "UPLOAD_SUCCESS": {
+      const payload = action.payload ?? {};
+      const stars = Number.isFinite(payload.stars) ? payload.stars : 0;
+      const tips = normalizeTips(payload.tips);
       return {
         ...state,
         uploading: false,
-        stars: action.payload.stars,
-        tips: action.payload.tips,
-        uploadProgress: 100,
+        stars,
+        tips,
+        uploadProgress: UPLOAD_COMPLETE_PROGRESS,
         errorMessage: "",
         analysisStepMessage: "Analysis complete!",
       };
-    case "UPLOAD_FAIL":
-      console.error("[REDUCER] UPLOAD_FAIL:", action.payload);
+    }
+    case "UPLOAD_FAIL": {
+      const errorMessage =
+        typeof action.payload === "string"
+          ? action.payload
+          : DEFAULT_ERROR_MESSAGE;
+      logger.error("Upload failed.", action.payload);
       return {
         ...state,
         uploading: false,
-        errorMessage: action.payload,
-        uploadProgress: 0,
+        errorMessage,
+        uploadProgress: INITIAL_UPLOAD_PROGRESS,
         analysisStepMessage: "Process failed.",
       };
+    }
     case "TOGGLE_DETAILS":
       return { ...state, isDetailsOpen: !state.isDetailsOpen };
-    case "SET_FIRST_NAME":
-      return { ...state, firstName: action.payload };
-    case "SET_EMAIL":
-      return { ...state, email: action.payload };
-    case "SET_CONTACT":
-      return { ...state, contact: action.payload };
+    case "SET_FIRST_NAME": {
+      const firstName =
+        typeof action.payload === "string" ? action.payload : "";
+      return { ...state, firstName };
+    }
+    case "SET_EMAIL": {
+      const email = typeof action.payload === "string" ? action.payload : "";
+      return { ...state, email };
+    }
+    case "SET_CONTACT": {
+      const contact = typeof action.payload === "string" ? action.payload : "";
+      return { ...state, contact };
+    }
     default:
-      console.warn(`[REDUCER] Unknown action type: ${action.type}`);
+      logger.warn("Reducer received an unknown action type.", action.type);
       return state;
   }
 }
 
+/**
+ * Root application component.
+ * @returns {JSX.Element} App layout with navigation and theme context.
+ */
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
-  // Removed unused count state
-
-  // UI rendering logic and related functions (pickDocument, uploadAndAnalyze, getStarEmoji) removed
 
   return (
     <ThemeProvider>
@@ -92,5 +163,3 @@ function App() {
 }
 
 export default App;
-
-// Styles removed as they are related to UI elements moved to HomeScreen
