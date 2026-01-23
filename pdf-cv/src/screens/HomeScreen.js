@@ -43,12 +43,29 @@ const HomeScreen = ({ navigation, state, dispatch }) => {
   const { theme, toggleTheme } = useTheme();
   const styles = getStyles(theme);
 
+  const formatFileSize = (sizeInBytes) => {
+    if (!Number.isFinite(sizeInBytes) || sizeInBytes <= 0) {
+      return 'Unknown size';
+    }
+    const units = ['B', 'KB', 'MB', 'GB'];
+    const unitIndex = Math.min(Math.floor(Math.log(sizeInBytes) / Math.log(1024)), units.length - 1);
+    const size = sizeInBytes / Math.pow(1024, unitIndex);
+    return `${size.toFixed(size >= 10 || unitIndex === 0 ? 0 : 1)} ${units[unitIndex]}`;
+  };
+
   const pickDocument = async () => {
     let result = await DocumentPicker.getDocumentAsync({});
     if (result.assets && result.assets.length > 0 && result.assets[0].uri) {
       const asset = result.assets[0];
       console.log('[HomeScreen] Document picked successfully. URI:', asset.uri);
-      dispatch({ type: 'SET_PDF', payload: asset.uri });
+      dispatch({
+        type: 'SET_PDF',
+        payload: {
+          uri: asset.uri,
+          name: asset.name,
+          size: asset.size,
+        },
+      });
     } else if (result.canceled) {
       console.log('[HomeScreen] Document picking cancelled by user.');
       Alert.alert('Document Picker', 'No document was selected. Please try again if you wish to upload a CV.');
@@ -236,6 +253,18 @@ const HomeScreen = ({ navigation, state, dispatch }) => {
         {!state.uploading && state.analysisStepMessage === 'Analysis complete!' && (
           <View style={styles.successBanner}>
             <Text style={styles.successBannerText}>{state.analysisStepMessage}</Text>
+          </View>
+        )}
+
+        {!state.uploading && state.pdf && (
+          <View style={styles.confirmationCard}>
+            <Text style={styles.confirmationTitle}>Confirmation</Text>
+            <Text style={styles.confirmationText}>
+              Selected CV: {state.pdfName || 'Unnamed file'} ({formatFileSize(state.pdfSize)})
+            </Text>
+            <Text style={styles.confirmationSubtext}>
+              Review the file details before running the analysis.
+            </Text>
           </View>
         )}
 
@@ -497,6 +526,31 @@ const getStyles = (theme) => {
       textAlign: 'center',
       color: theme.SUCCESS_TEXT_COLOR,
       fontWeight: '600',
+    },
+    confirmationCard: {
+      marginTop: 16,
+      marginHorizontal: 20,
+      padding: 16,
+      borderRadius: 16,
+      backgroundColor: theme.CARD_BACKGROUND_COLOR,
+      borderWidth: 1,
+      borderColor: theme.BORDER_COLOR,
+      ...shadow,
+    },
+    confirmationTitle: {
+      fontSize: 16,
+      fontWeight: '700',
+      color: theme.TEXT_COLOR,
+      marginBottom: 8,
+    },
+    confirmationText: {
+      fontSize: 14,
+      color: theme.TEXT_COLOR,
+      marginBottom: 6,
+    },
+    confirmationSubtext: {
+      fontSize: 12,
+      color: theme.MUTED_TEXT_COLOR,
     },
     errorCard: {
       marginHorizontal: 20,

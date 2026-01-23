@@ -27,6 +27,8 @@ const logger = {
 
 const initialState = {
   pdf: null,
+  pdfName: "",
+  pdfSize: null,
   uploading: false,
   uploadProgress: INITIAL_UPLOAD_PROGRESS,
   stars: 0,
@@ -56,10 +58,15 @@ function reducer(state, action) {
 
   switch (action.type) {
     case "SET_PDF": {
-      const pdf = action.payload ?? null;
+      const payload = action.payload ?? {};
+      const pdf = typeof payload.uri === "string" ? payload.uri : null;
+      const pdfName = typeof payload.name === "string" ? payload.name : "";
+      const pdfSize = Number.isFinite(payload.size) ? payload.size : null;
       return {
         ...state,
         pdf,
+        pdfName,
+        pdfSize,
         analysisStepMessage: "",
         errorMessage: "",
         stars: 0,
