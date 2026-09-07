@@ -1,40 +1,1075 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="A powerful PDF CV analyzer that helps you improve your resume quality.">
-    <meta name="keywords" content="PDF, CV, Analyzer, Quality, Resume">
-    <title>PDF CV Analyzer</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Brain Singularity · Mental Arcade</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+    <style>
+        /* ── reset & base ── */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #06060e;
+            font-family: 'Inter', -apple-system, sans-serif;
+            color: #fff;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" integrity="sha384-1CmrxMRARb6aLqgBO7+KSNX1bVka7QQ+7STnyfvjW4q75umpH3I70JHNjmrH6KxJ" crossorigin="anonymous">
+        /* ── canvas background ── */
+        #bg-canvas {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            z-index: 0;
+        }
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="../src/assets/favicon.png">
+        /* ── overlay UI ── */
+        #app {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            pointer-events: none;
+        }
+        #app>* {
+            pointer-events: auto;
+        }
 
-    <!-- Custom styles for this template -->
-    <link href="styles.css" rel="stylesheet">
-    
-    <!-- If you're using a manifest for a PWA, include it as well -->
-    <link rel="manifest" href="manifest.json">
+        /* ── top bar ── */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 22px;
+            background: linear-gradient(180deg, rgba(6, 6, 14, 0.85) 60%, transparent);
+            z-index: 20;
+            font-size: 0.75rem;
+            letter-spacing: 0.03em;
+            flex-wrap: wrap;
+            gap: 6px 12px;
+        }
+        .top-bar .brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #b0c4ff;
+        }
+        .top-bar .brand span {
+            color: #00f3ff;
+        }
+        .top-bar .stats {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .top-bar .stats .val {
+            color: #00f3ff;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: color 0.4s;
+        }
+        .top-bar .stats .val.gold {
+            color: #ffbb33;
+        }
+        .top-bar .stats .val.green {
+            color: #44ffaa;
+        }
+        .top-bar .stats .val.pulse {
+            animation: pulse-val 1.2s ease;
+        }
+        @keyframes pulse-val {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.5);
+                color: #fff;
+            }
+        }
+
+        /* ── game card ── */
+        .game-card {
+            background: rgba(12, 12, 30, 0.65);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(0, 243, 255, 0.15);
+            border-radius: 36px;
+            padding: 32px 28px 28px;
+            max-width: 540px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            transition: border-color 0.8s;
+            position: relative;
+            overflow: hidden;
+        }
+        .game-card::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 38px;
+            padding: 2px;
+            background: conic-gradient(from 0deg, transparent, rgba(0, 243, 255, 0.08), transparent, rgba(0, 243, 255, 0.08), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            opacity: 0.4;
+            transition: opacity 1s;
+        }
+        .game-card.correct-glow {
+            border-color: rgba(68, 255, 170, 0.5);
+            box-shadow: 0 0 50px rgba(68, 255, 170, 0.08);
+        }
+        .game-card.wrong-glow {
+            border-color: rgba(255, 0, 68, 0.4);
+            box-shadow: 0 0 50px rgba(255, 0, 68, 0.08);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: rgba(255, 255, 255, 0.35);
+        }
+        .card-header .level {
+            background: rgba(0, 243, 255, 0.08);
+            padding: 4px 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 243, 255, 0.08);
+            font-weight: 600;
+            color: #00f3ff;
+        }
+
+        .problem {
+            text-align: center;
+            padding: 18px 0 14px;
+            font-size: 2.8rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            color: #fff;
+            line-height: 1.3;
+            min-height: 5.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            text-shadow: 0 0 40px rgba(0, 243, 255, 0.06);
+        }
+        .problem .op-symbol {
+            color: #00f3ff;
+            margin: 0 6px;
+        }
+        .problem .eq-symbol {
+            color: rgba(255, 255, 255, 0.25);
+            margin: 0 6px;
+        }
+
+        /* ── answer grid ── */
+        .answers {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 14px 0 12px;
+        }
+        .answer-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 18px;
+            padding: 18px 8px;
+            font-size: 1.4rem;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            position: relative;
+            text-align: center;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            touch-action: manipulation;
+        }
+        .answer-btn:hover:not(:disabled) {
+            background: rgba(0, 243, 255, 0.06);
+            border-color: rgba(0, 243, 255, 0.2);
+            transform: translateY(-1px);
+        }
+        .answer-btn:active:not(:disabled) {
+            transform: scale(0.95);
+        }
+        .answer-btn:disabled {
+            opacity: 0.4;
+            cursor: default;
+            transform: none;
+        }
+        .answer-btn.correct {
+            background: rgba(68, 255, 170, 0.15);
+            border-color: #44ffaa;
+            color: #44ffaa;
+            box-shadow: 0 0 30px rgba(68, 255, 170, 0.08);
+        }
+        .answer-btn.wrong {
+            background: rgba(255, 0, 68, 0.15);
+            border-color: #ff0044;
+            color: #ff0044;
+            box-shadow: 0 0 30px rgba(255, 0, 68, 0.08);
+        }
+        .answer-btn .sub {
+            display: block;
+            font-size: 0.55rem;
+            font-weight: 400;
+            font-family: 'Inter', sans-serif;
+            opacity: 0.3;
+            margin-top: 2px;
+            letter-spacing: 0.05em;
+        }
+
+        /* ── bottom bar ── */
+        .bottom-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.3);
+            font-family: 'JetBrains Mono', monospace;
+            padding: 0 4px;
+        }
+        .bottom-info .timer {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .bottom-info .timer .val {
+            color: #00f3ff;
+            font-weight: 700;
+        }
+        .bottom-info .combo {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .bottom-info .combo .val {
+            color: #ffbb33;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .bottom-info .combo .label {
+            opacity: 0.5;
+        }
+
+        /* ── feedback overlay ── */
+        .feedback {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            font-weight: 800;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.15s;
+            border-radius: 36px;
+            background: rgba(6, 6, 14, 0.3);
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+        }
+        .feedback.show {
+            opacity: 1;
+        }
+        .feedback.correct {
+            color: #44ffaa;
+            text-shadow: 0 0 60px rgba(68, 255, 170, 0.3);
+        }
+        .feedback.wrong {
+            color: #ff0044;
+            text-shadow: 0 0 60px rgba(255, 0, 68, 0.3);
+        }
+
+        /* ── watermark footer ── */
+        .watermark {
+            position: fixed;
+            bottom: 14px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.55rem;
+            color: rgba(255, 255, 255, 0.12);
+            letter-spacing: 0.12em;
+            font-weight: 300;
+            z-index: 20;
+            pointer-events: none;
+            font-family: 'Inter', sans-serif;
+        }
+        .watermark strong {
+            color: rgba(255, 255, 255, 0.18);
+            font-weight: 500;
+        }
+        .watermark .dot {
+            color: rgba(0, 243, 255, 0.15);
+            margin: 0 4px;
+        }
+
+        /* ── responsive ── */
+        @media (max-width: 480px) {
+            .top-bar {
+                padding: 10px 14px;
+                font-size: 0.6rem;
+            }
+            .top-bar .brand {
+                font-size: 0.7rem;
+            }
+            .top-bar .stats {
+                gap: 10px;
+                font-size: 0.6rem;
+            }
+            .top-bar .stats .val {
+                font-size: 0.75rem;
+            }
+            .game-card {
+                padding: 20px 16px 18px;
+                border-radius: 28px;
+            }
+            .problem {
+                font-size: 2rem;
+                min-height: 4rem;
+                padding: 10px 0;
+            }
+            .answers {
+                gap: 8px;
+            }
+            .answer-btn {
+                padding: 14px 6px;
+                font-size: 1.1rem;
+                border-radius: 14px;
+            }
+            .feedback {
+                font-size: 2.8rem;
+                border-radius: 28px;
+            }
+            .bottom-info {
+                font-size: 0.6rem;
+            }
+            .watermark {
+                font-size: 0.45rem;
+                bottom: 8px;
+            }
+        }
+        @media (max-width: 380px) {
+            .problem {
+                font-size: 1.6rem;
+            }
+            .answer-btn {
+                font-size: 0.95rem;
+                padding: 12px 4px;
+            }
+            .game-card {
+                padding: 16px 12px 14px;
+            }
+            .top-bar .stats {
+                gap: 6px;
+            }
+        }
+
+        /* ── scrollbar hide ── */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* ── utility ── */
+        .hidden {
+            display: none !important;
+        }
+        .text-glow {
+            text-shadow: 0 0 30px currentColor;
+        }
+    </style>
 </head>
 <body>
-    <div id="app-root">
-        <!-- The React app will be injected here -->
+
+    <!-- ====== CANVAS BACKGROUND ====== -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- ====== TOP BAR ====== -->
+    <header class="top-bar">
+        <div class="brand">
+            <span>🧠</span> Brain<span>Singularity</span>
+        </div>
+        <div class="stats">
+            <span>SCORE <span class="val" id="scoreDisplay">0</span></span>
+            <span>BEST <span class="val gold" id="bestDisplay">0</span></span>
+            <span>⚡ <span class="val" id="streakDisplay">0</span></span>
+        </div>
+    </header>
+
+    <!-- ====== GAME CARD ====== -->
+    <div id="app">
+        <div class="game-card" id="gameCard">
+            <!-- feedback overlay -->
+            <div class="feedback" id="feedback"></div>
+
+            <div class="card-header">
+                <span>🧠 mental arcade</span>
+                <span class="level" id="levelDisplay">Lv.1</span>
+            </div>
+
+            <div class="problem" id="problemDisplay">
+                8 <span class="op-symbol">×</span> 7 <span class="eq-symbol">=</span> <span style="color:rgba(255,255,255,0.15);">?</span>
+            </div>
+
+            <div class="answers" id="answersContainer">
+                <button class="answer-btn" data-index="0">56 <span class="sub">A</span></button>
+                <button class="answer-btn" data-index="1">49 <span class="sub">B</span></button>
+                <button class="answer-btn" data-index="2">63 <span class="sub">C</span></button>
+                <button class="answer-btn" data-index="3">42 <span class="sub">D</span></button>
+            </div>
+
+            <div class="bottom-info">
+                <span class="timer">⏱ <span class="val" id="timerDisplay">0.0</span>s</span>
+                <span class="combo">
+                    <span class="label">🔥 combo</span>
+                    <span class="val" id="comboDisplay">0</span>
+                </span>
+            </div>
+        </div>
     </div>
 
-    <!-- Bootstrap Bundle with Popper -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js" integrity="sha384-kQtW33rZJAHjyIOiIO9C9w2R4HlLqovbNX6vG+SZ1zs1z7q0IlKx75U8eE7Pnu+o" crossorigin="anonymous"></script>
+    <!-- ====== WATERMARK ====== -->
+    <div class="watermark">
+        <strong>Kevin Marville</strong> <span class="dot">·</span> TechAndStream <span class="dot">·</span> 2026
+        <span style="margin:0 8px;opacity:0.2;">|</span> kvnbbg.fr <span class="dot">·</span> kvnbbg-creations.io
+    </div>
 
-    <!-- Your application's bundled js -->
-    <script src="bundle.js"></script>
-    <footer class="bg-light text-center text-lg-start">
-        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-          © 2024:
-          <a class="text-dark" href="https://yourwebsite.com/">YourWebsite.com</a>
-        </div>
-      </footer>      
+    <!-- ============================================================ -->
+    <!-- ====== JAVASCRIPT ====== -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ─── DOM refs ──────────────────────────────────────────────
+            const canvas = document.getElementById('bg-canvas');
+            const ctx = canvas.getContext('2d');
+
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            const bestDisplay = document.getElementById('bestDisplay');
+            const streakDisplay = document.getElementById('streakDisplay');
+            const comboDisplay = document.getElementById('comboDisplay');
+            const timerDisplay = document.getElementById('timerDisplay');
+            const levelDisplay = document.getElementById('levelDisplay');
+            const problemDisplay = document.getElementById('problemDisplay');
+            const answersContainer = document.getElementById('answersContainer');
+            const answerBtns = answersContainer.querySelectorAll('.answer-btn');
+            const feedbackEl = document.getElementById('feedback');
+            const gameCard = document.getElementById('gameCard');
+
+            // ─── canvas sizing ────────────────────────────────────────
+            let W, H;
+
+            function resizeCanvas() {
+                W = canvas.width = window.innerWidth;
+                H = canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            // ─── particle system ──────────────────────────────────────
+            const PARTICLE_COUNT = 280;
+            const particles = [];
+            const mouse = { x: -9999, y: -9999, px: -9999, py: -9999, vx: 0, vy: 0 };
+
+            class Particle {
+                constructor() {
+                    this.reset(true);
+                }
+                reset(init) {
+                    this.x = Math.random() * W;
+                    this.y = Math.random() * H;
+                    this.size = 1.2 + Math.random() * 2.6;
+                    this.speed = 0.08 + Math.random() * 0.22;
+                    this.angle = Math.random() * Math.PI * 2;
+                    this.drift = 0.002 + Math.random() * 0.006;
+                    this.opacity = 0.15 + Math.random() * 0.45;
+                    this.hue = 200 + Math.random() * 40; // 200–240 (blue-cyan)
+                    if (!init) {
+                        // occasionally spawn with warmer hue
+                        if (Math.random() < 0.15) this.hue = 30 + Math.random() * 30;
+                    }
+                    this.pulse = Math.random() * Math.PI * 2;
+                    this.pulseSpeed = 0.01 + Math.random() * 0.025;
+                }
+                update() {
+                    this.pulse += this.pulseSpeed;
+                    const driftX = Math.sin(this.pulse * 0.7 + this.y * 0.003) * this.drift;
+                    const driftY = Math.cos(this.pulse * 0.5 + this.x * 0.003) * this.drift;
+
+                    // mouse influence
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    let influence = 0;
+                    if (dist < 180 && dist > 0) {
+                        influence = (1 - dist / 180) * 0.6;
+                        const angle = Math.atan2(dy, dx);
+                        this.x += Math.cos(angle) * influence * 1.2;
+                        this.y += Math.sin(angle) * influence * 1.2;
+                    }
+                    // gentle repulsion from mouse when very close
+                    if (dist < 40 && dist > 0) {
+                        const angle = Math.atan2(dy, dx);
+                        const push = (1 - dist / 40) * 0.8;
+                        this.x -= Math.cos(angle) * push * 1.8;
+                        this.y -= Math.sin(angle) * push * 1.8;
+                    }
+
+                    // drift + speed
+                    this.x += Math.cos(this.angle + this.pulse * 0.3) * this.speed * 0.4 + driftX;
+                    this.y += Math.sin(this.angle + this.pulse * 0.2) * this.speed * 0.4 + driftY;
+
+                    // wrap
+                    if (this.x < -20) this.x = W + 20;
+                    if (this.x > W + 20) this.x = -20;
+                    if (this.y < -20) this.y = H + 20;
+                    if (this.y > H + 20) this.y = -20;
+
+                    // occasional hue shift
+                    if (Math.random() < 0.001) {
+                        this.hue = 190 + Math.random() * 60;
+                    }
+                }
+                draw() {
+                    const alpha = this.opacity * (0.7 + 0.3 * Math.sin(this.pulse));
+                    const size = this.size * (0.8 + 0.2 * Math.sin(this.pulse * 0.6));
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, size, 0, Math.PI * 2);
+                    const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, size * 3);
+                    grad.addColorStop(0, `hsla(${this.hue}, 90%, 75%, ${alpha * 0.7})`);
+                    grad.addColorStop(0.5, `hsla(${this.hue + 10}, 80%, 50%, ${alpha * 0.3})`);
+                    grad.addColorStop(1, `hsla(${this.hue + 20}, 70%, 30%, 0)`);
+                    ctx.fillStyle = grad;
+                    ctx.fill();
+
+                    // core glow
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, size * 0.3, 0, Math.PI * 2);
+                    ctx.fillStyle = `hsla(${this.hue + 20}, 100%, 90%, ${alpha * 0.3})`;
+                    ctx.fill();
+                }
+            }
+
+            // init particles
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                particles.push(new Particle());
+            }
+
+            // ─── mouse / touch tracking ──────────────────────────────
+            function handleMove(x, y) {
+                mouse.px = mouse.x;
+                mouse.py = mouse.y;
+                mouse.x = x;
+                mouse.y = y;
+                mouse.vx = mouse.x - mouse.px;
+                mouse.vy = mouse.y - mouse.py;
+            }
+
+            window.addEventListener('mousemove', (e) => {
+                handleMove(e.clientX, e.clientY);
+            });
+            window.addEventListener('touchmove', (e) => {
+                const t = e.touches[0];
+                if (t) handleMove(t.clientX, t.clientY);
+            }, { passive: true });
+            window.addEventListener('touchstart', (e) => {
+                const t = e.touches[0];
+                if (t) handleMove(t.clientX, t.clientY);
+            }, { passive: true });
+            window.addEventListener('mouseleave', () => {
+                mouse.x = -9999;
+                mouse.y = -9999;
+            });
+
+            // ─── click burst effect ──────────────────────────────────
+            function burstParticles(cx, cy, count = 40, hue = 200) {
+                for (let i = 0; i < count; i++) {
+                    const p = new Particle();
+                    p.x = cx + (Math.random() - 0.5) * 20;
+                    p.y = cy + (Math.random() - 0.5) * 20;
+                    p.hue = hue + (Math.random() - 0.5) * 30;
+                    p.size = 1 + Math.random() * 3;
+                    p.opacity = 0.4 + Math.random() * 0.5;
+                    const angle = Math.random() * Math.PI * 2;
+                    const speed = 1 + Math.random() * 4;
+                    p._vx = Math.cos(angle) * speed;
+                    p._vy = Math.sin(angle) * speed;
+                    p._life = 1;
+                    p._decay = 0.008 + Math.random() * 0.015;
+                    p._isBurst = true;
+                    particles.push(p);
+                }
+                // also push some trailing particles
+                for (let i = 0; i < 20; i++) {
+                    const p = new Particle();
+                    p.x = cx + (Math.random() - 0.5) * 60;
+                    p.y = cy + (Math.random() - 0.5) * 60;
+                    p.hue = hue + 20 + (Math.random() - 0.5) * 20;
+                    p.size = 0.5 + Math.random() * 1.5;
+                    p.opacity = 0.2 + Math.random() * 0.3;
+                    p._vx = (Math.random() - 0.5) * 2;
+                    p._vy = (Math.random() - 0.5) * 2;
+                    p._life = 1;
+                    p._decay = 0.01 + Math.random() * 0.02;
+                    p._isBurst = true;
+                    particles.push(p);
+                }
+            }
+
+            // ─── draw background ──────────────────────────────────────
+            function drawBg() {
+                // subtle gradient
+                const grad = ctx.createRadialGradient(W * 0.5, H * 0.5, 0, W * 0.5, H * 0.5, Math.max(W, H) * 0.7);
+                grad.addColorStop(0, '#0a0a1a');
+                grad.addColorStop(0.5, '#06060e');
+                grad.addColorStop(1, '#020208');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, W, H);
+
+                // very faint stars
+                ctx.fillStyle = 'rgba(255,255,255,0.015)';
+                for (let i = 0; i < 60; i++) {
+                    const sx = (i * 137.508) % W;
+                    const sy = (i * 97.31 + 50) % H;
+                    const sz = 0.5 + (i % 3) * 0.5;
+                    ctx.beginPath();
+                    ctx.arc(sx, sy, sz, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            // ─── animation loop ──────────────────────────────────────
+            function animateParticles() {
+                // update & draw
+                for (let i = particles.length - 1; i >= 0; i--) {
+                    const p = particles[i];
+                    if (p._isBurst) {
+                        p.x += p._vx || 0;
+                        p.y += p._vy || 0;
+                        p._vx = (p._vx || 0) * 0.99;
+                        p._vy = (p._vy || 0) * 0.99;
+                        p._life -= p._decay || 0.01;
+                        p.opacity = (p._life || 0) * 0.6;
+                        p.size *= 0.998;
+                        if (p._life <= 0 || p.size < 0.1) {
+                            particles.splice(i, 1);
+                            continue;
+                        }
+                        p.draw();
+                    } else {
+                        p.update();
+                        p.draw();
+                    }
+                }
+                // keep particle count healthy
+                while (particles.length < PARTICLE_COUNT) {
+                    particles.push(new Particle());
+                }
+                if (particles.length > PARTICLE_COUNT + 120) {
+                    // remove oldest non-burst
+                    for (let i = particles.length - 1; i >= 0; i--) {
+                        if (!particles[i]._isBurst) {
+                            particles.splice(i, 1);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // ─── game state ──────────────────────────────────────────
+            const state = {
+                score: 0,
+                best: parseInt(localStorage.getItem('brainSingularityBest')) || 0,
+                streak: 0,
+                combo: 0,
+                level: 1,
+                correct: 0,
+                wrong: 0,
+                total: 0,
+                answer: 0,
+                choices: [],
+                correctIndex: -1,
+                isLocked: false,
+                timer: 0,
+                maxTimer: 8,
+                questionCount: 0,
+            };
+
+            // DOM sync
+            function updateUI() {
+                scoreDisplay.textContent = state.score;
+                bestDisplay.textContent = state.best;
+                streakDisplay.textContent = state.streak;
+                comboDisplay.textContent = state.combo;
+                levelDisplay.textContent = `Lv.${state.level}`;
+            }
+
+            // ─── generate problem ────────────────────────────────────
+            function generateProblem() {
+                const lv = state.level;
+                let a, b, op, answer, display;
+
+                // pick operation based on level
+                const ops = [];
+                if (lv <= 2) {
+                    ops.push('+', '+', '-', '×');
+                } else if (lv <= 4) {
+                    ops.push('+', '-', '×', '×', '÷');
+                } else {
+                    ops.push('+', '-', '×', '÷', '×', '÷');
+                }
+                op = ops[Math.floor(Math.random() * ops.length)];
+
+                // number ranges
+                let maxA, maxB;
+                if (lv <= 2) {
+                    maxA = 9 + lv * 3;
+                    maxB = 9 + lv * 2;
+                } else if (lv <= 4) {
+                    maxA = 12 + lv * 5;
+                    maxB = 10 + lv * 3;
+                } else {
+                    maxA = 20 + lv * 4;
+                    maxB = 15 + lv * 2;
+                }
+
+                // ensure division gives integer result
+                let attempts = 0;
+                while (attempts < 30) {
+                    a = Math.floor(Math.random() * maxA) + 1;
+                    b = Math.floor(Math.random() * maxB) + 1;
+                    if (op === '+') { answer = a + b;
+                        display = `${a} + ${b}`; break; }
+                    if (op === '-') {
+                        if (a >= b) { answer = a - b;
+                            display = `${a} − ${b}`; break; } else { a = b + Math.floor(Math.random() * 10) + 1;
+                            answer = a - b;
+                            display = `${a} − ${b}`; break; }
+                    }
+                    if (op === '×') { answer = a * b;
+                        display = `${a} × ${b}`; break; }
+                    if (op === '÷') {
+                        if (b === 0) { b = 1; }
+                        if (a % b === 0 && a / b > 0) { answer = a / b;
+                            display = `${a} ÷ ${b}`; break; } else {
+                            // make it divisible
+                            b = Math.floor(Math.random() * 8) + 1;
+                            const multiplier = Math.floor(Math.random() * 8) + 1;
+                            a = b * multiplier;
+                            answer = multiplier;
+                            display = `${a} ÷ ${b}`;
+                            break;
+                        }
+                    }
+                    attempts++;
+                }
+                // fallback
+                if (attempts >= 30) {
+                    a = Math.floor(Math.random() * 9) + 2;
+                    b = Math.floor(Math.random() * 9) + 2;
+                    op = '+';
+                    answer = a + b;
+                    display = `${a} + ${b}`;
+                }
+
+                state.answer = answer;
+                state.total++;
+
+                // build choices (3 wrong + 1 correct)
+                const choices = new Set();
+                choices.add(answer);
+                let offset = Math.max(1, Math.floor(Math.abs(answer) * 0.08) + 1);
+                if (offset < 1) offset = 1;
+                let attempts2 = 0;
+                while (choices.size < 4 && attempts2 < 100) {
+                    attempts2++;
+                    let wrong;
+                    const variant = Math.random();
+                    if (variant < 0.3) {
+                        wrong = answer + Math.floor(Math.random() * offset * 2) - offset;
+                    } else if (variant < 0.6) {
+                        wrong = answer + Math.floor(Math.random() * offset * 4) - offset * 2;
+                    } else {
+                        wrong = answer + (Math.floor(Math.random() * 3) - 1) * (offset + Math.floor(Math.random() * 5));
+                    }
+                    if (wrong !== answer && wrong > 0 && Number.isInteger(wrong)) {
+                        choices.add(wrong);
+                    }
+                }
+                // if still not enough, pad
+                let fallbacks = [answer + 1, answer - 1, answer + 2, answer - 2, answer + 3];
+                let fi = 0;
+                while (choices.size < 4 && fi < fallbacks.length) {
+                    const val = fallbacks[fi];
+                    if (val > 0 && val !== answer && Number.isInteger(val)) {
+                        choices.add(val);
+                    }
+                    fi++;
+                }
+                // if still not enough, brute force
+                let bf = 1;
+                while (choices.size < 4) {
+                    const val = answer + bf;
+                    if (val > 0 && val !== answer) choices.add(val);
+                    bf++;
+                    if (bf > 20) break;
+                }
+                const choiceArr = Array.from(choices);
+                // shuffle
+                for (let i = choiceArr.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [choiceArr[i], choiceArr[j]] = [choiceArr[j], choiceArr[i]];
+                }
+                state.choices = choiceArr.slice(0, 4);
+                state.correctIndex = state.choices.indexOf(answer);
+                if (state.correctIndex === -1) {
+                    // fallback: ensure correct is in choices
+                    state.choices[0] = answer;
+                    state.correctIndex = 0;
+                    // reshuffle
+                    for (let i = state.choices.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [state.choices[i], state.choices[j]] = [state.choices[j], state.choices[i]];
+                    }
+                    state.correctIndex = state.choices.indexOf(answer);
+                }
+
+                // render
+                const opSymbol = op === '+' ? '+' : op === '-' ? '−' : op === '×' ? '×' : '÷';
+                problemDisplay.innerHTML =
+                    `${a} <span class="op-symbol">${opSymbol}</span> ${b} <span class="eq-symbol">=</span> <span style="color:rgba(255,255,255,0.12);">?</span>`;
+
+                const labels = ['A', 'B', 'C', 'D'];
+                answerBtns.forEach((btn, i) => {
+                    if (i < state.choices.length) {
+                        btn.textContent = state.choices[i];
+                        const sub = btn.querySelector('.sub');
+                        if (sub) sub.textContent = labels[i] || '';
+                        btn.style.display = '';
+                        btn.className = 'answer-btn';
+                        btn.disabled = false;
+                    } else {
+                        btn.style.display = 'none';
+                    }
+                });
+
+                state.timer = 0;
+                state.isLocked = false;
+                gameCard.className = 'game-card';
+                feedbackEl.className = 'feedback';
+                updateUI();
+            }
+
+            // ─── handle answer ──────────────────────────────────────
+            function handleAnswer(index) {
+                if (state.isLocked) return;
+                if (index < 0 || index >= state.choices.length) return;
+                state.isLocked = true;
+                const isCorrect = (index === state.correctIndex);
+                const btn = answerBtns[index];
+                const correctBtn = answerBtns[state.correctIndex];
+
+                // disable all
+                answerBtns.forEach(b => b.disabled = true);
+
+                // highlight
+                if (isCorrect) {
+                    btn.classList.add('correct');
+                    state.score += Math.max(1, Math.floor(10 + state.level * 1.5 + state.combo * 0.5));
+                    state.correct++;
+                    state.streak++;
+                    state.combo++;
+                    if (state.score > state.best) {
+                        state.best = state.score;
+                        localStorage.setItem('brainSingularityBest', String(state.best));
+                    }
+                    // burst particles (green)
+                    const rect = btn.getBoundingClientRect();
+                    burstParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, 35, 140);
+                    // feedback
+                    feedbackEl.textContent = '✓';
+                    feedbackEl.className = 'feedback correct show';
+                    gameCard.className = 'game-card correct-glow';
+                } else {
+                    btn.classList.add('wrong');
+                    correctBtn.classList.add('correct');
+                    state.wrong++;
+                    state.streak = 0;
+                    state.combo = Math.max(0, state.combo - 2);
+                    // burst particles (red)
+                    const rect = btn.getBoundingClientRect();
+                    burstParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, 30, 0);
+                    feedbackEl.textContent = '✗';
+                    feedbackEl.className = 'feedback wrong show';
+                    gameCard.className = 'game-card wrong-glow';
+                }
+
+                // update level
+                state.level = Math.max(1, Math.floor(state.score / 50) + 1);
+                // level up burst
+                if (state.level > 1 && state.score % 50 < 5) {
+                    burstParticles(W / 2, H / 2, 50, 190);
+                }
+
+                updateUI();
+
+                // next question after delay
+                setTimeout(() => {
+                    feedbackEl.className = 'feedback';
+                    gameCard.className = 'game-card';
+                    generateProblem();
+                    // subtle reset timer
+                    state.timer = 0;
+                }, isCorrect ? 600 : 1000);
+            }
+
+            // ─── timer loop ──────────────────────────────────────────
+            let timerInterval = null;
+            let lastTime = 0;
+
+            function startTimer() {
+                if (timerInterval) return;
+                lastTime = performance.now();
+                timerInterval = requestAnimationFrame(updateTimer);
+            }
+
+            function updateTimer() {
+                const now = performance.now();
+                const delta = (now - lastTime) / 1000;
+                lastTime = now;
+                if (!state.isLocked) {
+                    state.timer += delta;
+                    timerDisplay.textContent = state.timer.toFixed(1);
+                    if (state.timer > state.maxTimer) {
+                        // time's up — auto-fail
+                        state.isLocked = true;
+                        answerBtns.forEach(b => b.disabled = true);
+                        // highlight correct
+                        const correctBtn = answerBtns[state.correctIndex];
+                        if (correctBtn) correctBtn.classList.add('correct');
+                        state.streak = 0;
+                        state.combo = Math.max(0, state.combo - 1);
+                        feedbackEl.textContent = '⏱';
+                        feedbackEl.className = 'feedback wrong show';
+                        gameCard.className = 'game-card wrong-glow';
+                        updateUI();
+                        setTimeout(() => {
+                            feedbackEl.className = 'feedback';
+                            gameCard.className = 'game-card';
+                            generateProblem();
+                            state.timer = 0;
+                        }, 900);
+                    }
+                }
+                timerInterval = requestAnimationFrame(updateTimer);
+            }
+
+            // ─── event binding ──────────────────────────────────────
+            answerBtns.forEach((btn, idx) => {
+                btn.addEventListener('click', () => handleAnswer(idx));
+                btn.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    handleAnswer(idx);
+                });
+            });
+
+            // ─── init game ──────────────────────────────────────────
+            function init() {
+                state.best = parseInt(localStorage.getItem('brainSingularityBest')) || 0;
+                generateProblem();
+                updateUI();
+                startTimer();
+                // kick off animation
+                requestAnimationFrame(function draw() {
+                    drawBg();
+                    animateParticles();
+                    requestAnimationFrame(draw);
+                });
+                // extra click bursts on card
+                gameCard.addEventListener('click', (e) => {
+                    if (!state.isLocked) {
+                        // small ripple on card click
+                        burstParticles(e.clientX, e.clientY, 12, 200);
+                    }
+                });
+            }
+
+            // ─── handle resize for canvas ──────────────────────────
+            window.addEventListener('resize', () => {
+                resizeCanvas();
+            });
+
+            init();
+
+            // ─── keyboard support ──────────────────────────────────
+            document.addEventListener('keydown', (e) => {
+                const keyMap = { '1': 0, '2': 1, '3': 2, '4': 3, 'a': 0, 'b': 1, 'c': 2, 'd': 3 };
+                const idx = keyMap[e.key.toLowerCase()];
+                if (idx !== undefined && !state.isLocked) {
+                    handleAnswer(idx);
+                }
+                if (e.key === 'r' || e.key === 'R') {
+                    // reset (hidden shortcut)
+                    if (confirm('Reset score?')) {
+                        state.score = 0;
+                        state.streak = 0;
+                        state.combo = 0;
+                        state.level = 1;
+                        state.correct = 0;
+                        state.wrong = 0;
+                        state.total = 0;
+                        localStorage.removeItem('brainSingularityBest');
+                        state.best = 0;
+                        generateProblem();
+                        updateUI();
+                    }
+                }
+            });
+
+            console.log('🧠 Brain Singularity · Kevin Marville · TechAndStream');
+            console.log('📊 Best score saved locally.');
+
+        })();
+    </script>
+
 </body>
 </html>
