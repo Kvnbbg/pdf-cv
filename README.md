@@ -14,7 +14,8 @@
 
 - **STUDI Trello:** Monitor our project's milestones and tasks via our [STUDI Trello](https://trello.com/b/A91KBkFf/kvnbbg-pdf-cv).
 - **GitHub Repository:** Access our source code and resources on [GitHub](https://github.com/Kvnbbg/pdf-cv).
-- **Live Application:** Experience the web application [here](https://kvnbbg.github.io/pdf-cv/)).
+- **ONLINE** Experience the web application [here](https://kvnbbg.github.io/pdf-cv/).
+- [LIVE](https://techandstream.com).**ON Streams**
 
 To install the PDF-CV app, follow these steps:
 
