@@ -1,74 +1,22 @@
-# PDF-CV App 📄
+# PDF-CV App 📁
 
-![image](STUDI/image.svg)
-
-This PDF-CV app allows users to create high-quality, customized professional CVs in PDF format. It offers a user-friendly interface and a variety of templates to choose from.
-
-![screenshot](STUDI/screenshot.png)
-
-# TO DO
-
-´
-npm install --save-exact --save-dev esbuild --loader:.js=jsx
-
-npm install react react-dom
-
-npm run build
-´
-
-## Purpose 🎯
-
-**How does the app work?**
-
-- **Upload Your CV** 📤:
-  - Navigate to the 'Upload Your CV' section on the main screen.
-  - Select your CV's PDF file from your device.
-  - Confirm the upload.
-
-- **Analysis and Results** 🔍:
-  - Once uploaded, the app automatically begins analyzing your CV.
-  - During this, an animation displays to show that analysis is underway.
-  - Wait for the results to be displayed.
-
-- **Quality Star Rating** ⭐:
-  - At the end of the analysis, your CV will receive a quality rating in stars.
-  - 5 stars indicate a top-quality CV that meets market expectations.
-  - Fewer stars suggest areas for improvement.
-
-- **CV Improvement Tips** 💡:
-  - Personalized recommendations will be provided based on the analysis.
-  - Follow these tips to enhance the quality of your CV.
-
-- **Technical Support** 🛠️:
-  - For any issues or additional questions, contact technical support through the app or by email at <contact@kvnbbg.fr>.
-
-## Features 🌟
-
-- **Emojis for Enhanced Readability:** 😊 Enabled
-- **Programming Paradigm:** 🧠 Object-Oriented
-- **Development Language:** 🌐 React
-- **Project Focus:** 📚 Web Development
-- **Comments:** 📖 Descriptive and Insightful
-- **Code Structure:** 🛠️ Modular and Clean
-- **Error Handling:** 🚫 Comprehensive and Robust
-- **UI Refresh:** ✨ Hero layout, insight cards, and step-by-step guidance inspired by modern generator patterns.
-- **Design Tokens:** 🎨 Centralized theme colors for consistent spacing, typography, and surfaces.
-- **Smart Status States:** ✅ Clear upload, progress, and quality feedback blocks.
-
-## Project Management Tools 🛠️
-
-- **Trello Board:** Monitor our project's milestones and tasks via our [Trello board](https://trello.com/b/A91KBkFf/kvnbbg-pdf-cv).
-- **GitHub Repository:** Access our source code and resources on [GitHub](https://github.com/Kvnbbg/pdf-cv).
-- **Live Application:** Experience the web application [here](https://pdf-cv-c8a60c902f01.herokuapp.com/).
-
-## Table of Contents 📑
+## Grimoire des Contenus 📑
 
 - [Installation](#installation)
 - [Usage](#usage)
 - [Contributing](#contributing)
 - [License](#license)
+- [Trello STUDI](#studi)
+
+![image](STUDI/devis.pdf)
+
+![screenshot](STUDI/flowchart.png)
 
 ## Installation
+
+- **STUDI Trello:** Monitor our project's milestones and tasks via our [STUDI Trello](https://trello.com/b/A91KBkFf/kvnbbg-pdf-cv).
+- **GitHub Repository:** Access our source code and resources on [GitHub](https://github.com/Kvnbbg/pdf-cv).
+- **Live Application:** Experience the web application [here](https://kvnbbg.github.io/pdf-cv/)).
 
 To install the PDF-CV app, follow these steps:
 
@@ -98,10 +46,23 @@ We welcome contributions from the community to enhance the PDF-CV app. To contri
 
 The PDF-CV app is distributed under the [Mozilla Public License Version 2.0](https://opensource.org/licenses/MPL-2.0). See the [LICENSE](LICENSE) file for more information.
 
-## STUDI Folder 📁
+## Studi
 
-The STUDI folder contains helpful resources for exam preparation, including:
+Sam pulled up a monitoring dashboard that looked like a Jackson Pollock painting rendered in neon red. "Explaining how the app works is easy. Proving *why* it crashes at 2 AM is our actual nightmare. We need a rigorous strategy for measuring our back-end pain points before the entire cluster melts."
 
-- **Study Guide:** STUDI/manuel_utilisateur.pdf
-- **Reference Materials:** STUDI/devis.pdf
-- **Flowcharts & Diagrams:** ![flowchart](STUDI/flowchart.png)
+Alex leaned in, tracing a massive latency spike on the monitor. "Exactly. The GraphQL layer is masking our real issues. A front-end developer requests a deeply nested object, and suddenly our PostgreSQL database is doing an unindexed table scan. We aren't measuring the query depth, so the resolvers just choke quietly."
+
+"And don't get me started on the message broker," Sam added, tapping the glass. "If the legacy SOAP gateway times out, RabbitMQ just keeps eating inbound requests. We only find out we have a problem when the queue depth hits critical mass, the memory maxes out, and the worker nodes start dropping like flies."
+
+Morgan sighed, rubbing their temples. "I don't speak Grafana, Sam. To the board, a 'back-end pain point' is a customer abandoning their checkout because the loading spinner timed out. If you want the budget for better observability tools, you have to translate these server metrics into business realities. CPU saturation means nothing to me; user churn rate means everything."
+
+Zane looked up from a Discord server, eyes wide. "If we just minted our server logs as NFTs, the community would audit our smart contracts for free. The real pain point is centralized telemetry. If a node goes down, we just slash the validator's staked tokens!"
+
+Alex closed their eyes, taking a deep, stabilizing breath before outlining the actual observability strategy on the whiteboard.
+
+**Core Telemetry & Bottleneck Detection**
+
+* **Consumer Lag & Queue Depth:** Monitoring RabbitMQ to track if messages are accumulating faster than worker nodes can process them. A growing queue is the earliest indicator of a blocked downstream service or a failing SOAP endpoint.
+* **Query Profiling & Deadlocks:** Analyzing PostgreSQL slow query logs and connection pool saturation. This exposes poorly optimized GraphQL resolvers before they lock up the relational database.
+* **Endpoint Latency & Error Rates:** Tracking the exact round-trip time for inbound REST and GraphQL requests, isolating HTTP 5xx errors and cascading timeouts to pinpoint exactly where the transaction pipeline is bleeding.
+* **Infrastructure Saturation:** Correlating CPU, memory, and network I/O spikes on the worker nodes with specific API payloads to predict precisely when the system requires auto-scaling.
