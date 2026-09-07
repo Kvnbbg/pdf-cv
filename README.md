@@ -8,9 +8,7 @@
 - [License](#license)
 - [Trello STUDI](#studi)
 
-![image](STUDI/devis.pdf)
-
-![screenshot](STUDI/flowchart.png)
+![flowchat image](STUDI/flowchart.png)
 
 ## Installation
 
