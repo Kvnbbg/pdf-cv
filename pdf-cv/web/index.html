@@ -1,14 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Brain Singularity · Mental Arcade</title>
+    <title>CV EN HORS-LIGNE</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+    <!-- OpenSearch (external search) -->
+    <link rel="search" type="application/opensearchdescription+xml" href="https://www.techandstream.com/opensearch.xml" title="TechAndStream Search" />
     <style>
-        /* ── reset & base ── */
+        /* ----- CSS Variables (default: dark/night) ----- */
+        :root {
+            --bg-primary: #06060e;
+            --bg-secondary: rgba(12, 12, 30, 0.55);
+            --bg-card: rgba(12, 12, 30, 0.55);
+            --text-primary: #e0e8ff;
+            --text-secondary: rgba(255, 255, 255, 0.6);
+            --text-muted: rgba(255, 255, 255, 0.3);
+            --border-color: rgba(0, 243, 255, 0.08);
+            --border-hover: rgba(0, 243, 255, 0.2);
+            --shadow-color: rgba(0, 0, 0, 0.5);
+            --input-bg: rgba(255, 255, 255, 0.04);
+            --input-border: rgba(255, 255, 255, 0.08);
+            --input-focus: #00f3ff;
+            --btn-bg: rgba(0, 243, 255, 0.08);
+            --btn-border: rgba(0, 243, 255, 0.2);
+            --btn-color: #00f3ff;
+            --accent: #00f3ff;
+            --gold: #ffbb33;
+            --highlight: #fff;
+            --card-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            --game-card-bg: rgba(6, 6, 14, 0.6);
+            --answer-bg: rgba(255, 255, 255, 0.03);
+            --answer-border: rgba(255, 255, 255, 0.06);
+            --answer-hover: rgba(0, 243, 255, 0.05);
+            --feedback-bg: rgba(6, 6, 14, 0.3);
+            --footer-color: rgba(255, 255, 255, 0.15);
+            --star-color: rgba(255, 255, 255, 0.012);
+        }
+
+        /* ----- Light mode (cream) ----- */
+        body.light-mode {
+            --bg-primary: #faf6f0;
+            --bg-secondary: rgba(255, 248, 240, 0.7);
+            --bg-card: rgba(255, 248, 240, 0.7);
+            --text-primary: #1a1a2e;
+            --text-secondary: rgba(0, 0, 0, 0.6);
+            --text-muted: rgba(0, 0, 0, 0.3);
+            --border-color: rgba(0, 0, 0, 0.06);
+            --border-hover: rgba(0, 0, 0, 0.15);
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --input-bg: rgba(0, 0, 0, 0.03);
+            --input-border: rgba(0, 0, 0, 0.08);
+            --input-focus: #0066cc;
+            --btn-bg: rgba(0, 0, 0, 0.04);
+            --btn-border: rgba(0, 0, 0, 0.1);
+            --btn-color: #0066cc;
+            --accent: #0066cc;
+            --gold: #cc8800;
+            --highlight: #1a1a2e;
+            --card-shadow: 0 20px 60px rgba(0, 0, 0, 0.06);
+            --game-card-bg: rgba(255, 248, 240, 0.7);
+            --answer-bg: rgba(0, 0, 0, 0.02);
+            --answer-border: rgba(0, 0, 0, 0.06);
+            --answer-hover: rgba(0, 0, 0, 0.04);
+            --feedback-bg: rgba(255, 248, 240, 0.5);
+            --footer-color: rgba(0, 0, 0, 0.15);
+            --star-color: rgba(0, 0, 0, 0.02);
+        }
+
+        /* ----- reset & base ----- */
         *,
         *::before,
         *::after {
@@ -16,282 +78,340 @@
             padding: 0;
             box-sizing: border-box;
         }
-        html,
+        html {
+            scroll-behavior: smooth;
+        }
         body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background: #06060e;
             font-family: 'Inter', -apple-system, sans-serif;
-            color: #fff;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            transition: background 0.4s, color 0.4s;
         }
 
-        /* ── canvas background ── */
+        /* ----- canvas background (transparent) ----- */
         #bg-canvas {
             position: fixed;
             inset: 0;
             width: 100%;
             height: 100%;
-            display: block;
             z-index: 0;
+            pointer-events: none;
+            display: block;
         }
 
-        /* ── overlay UI ── */
-        #app {
+        /* ----- main content (scrollable) ----- */
+        .app-wrapper {
             position: relative;
             z-index: 1;
-            width: 100%;
-            height: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 24px 40px;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
-            pointer-events: none;
-        }
-        #app>* {
-            pointer-events: auto;
+            gap: 50px;
         }
 
-        /* ── top bar ── */
-        .top-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
+        /* ----- header / navigation ----- */
+        .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 14px 22px;
-            background: linear-gradient(180deg, rgba(6, 6, 14, 0.85) 60%, transparent);
-            z-index: 20;
-            font-size: 0.75rem;
-            letter-spacing: 0.03em;
             flex-wrap: wrap;
-            gap: 6px 12px;
+            gap: 14px 20px;
+            padding: 16px 0 12px;
+            border-bottom: 1px solid var(--border-color);
+            backdrop-filter: blur(4px);
+            transition: border-color 0.4s;
         }
-        .top-bar .brand {
+        .brand {
             display: flex;
             align-items: center;
             gap: 8px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: #b0c4ff;
-        }
-        .top-bar .brand span {
-            color: #00f3ff;
-        }
-        .top-bar .stats {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            color: rgba(255, 255, 255, 0.6);
-        }
-        .top-bar .stats .val {
-            color: #00f3ff;
+            font-size: 1.2rem;
             font-weight: 700;
-            font-size: 0.9rem;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            text-decoration: none;
             transition: color 0.4s;
         }
-        .top-bar .stats .val.gold {
-            color: #ffbb33;
+        .brand span {
+            color: var(--accent);
         }
-        .top-bar .stats .val.green {
-            color: #44ffaa;
-        }
-        .top-bar .stats .val.pulse {
-            animation: pulse-val 1.2s ease;
-        }
-        @keyframes pulse-val {
-            0%,
-            100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.5);
-                color: #fff;
-            }
-        }
-
-        /* ── game card ── */
-        .game-card {
-            background: rgba(12, 12, 30, 0.65);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
-            border: 1px solid rgba(0, 243, 255, 0.15);
-            border-radius: 36px;
-            padding: 32px 28px 28px;
-            max-width: 540px;
-            width: 100%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.04);
-            transition: border-color 0.8s;
-            position: relative;
-            overflow: hidden;
-        }
-        .game-card::before {
-            content: '';
-            position: absolute;
-            inset: -2px;
-            border-radius: 38px;
-            padding: 2px;
-            background: conic-gradient(from 0deg, transparent, rgba(0, 243, 255, 0.08), transparent, rgba(0, 243, 255, 0.08), transparent);
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            pointer-events: none;
-            opacity: 0.4;
-            transition: opacity 1s;
-        }
-        .game-card.correct-glow {
-            border-color: rgba(68, 255, 170, 0.5);
-            box-shadow: 0 0 50px rgba(68, 255, 170, 0.08);
-        }
-        .game-card.wrong-glow {
-            border-color: rgba(255, 0, 68, 0.4);
-            box-shadow: 0 0 50px rgba(255, 0, 68, 0.08);
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 18px;
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: rgba(255, 255, 255, 0.35);
-        }
-        .card-header .level {
-            background: rgba(0, 243, 255, 0.08);
-            padding: 4px 14px;
-            border-radius: 20px;
-            border: 1px solid rgba(0, 243, 255, 0.08);
-            font-weight: 600;
-            color: #00f3ff;
-        }
-
-        .problem {
-            text-align: center;
-            padding: 18px 0 14px;
-            font-size: 2.8rem;
-            font-weight: 700;
-            letter-spacing: 0.02em;
-            color: #fff;
-            line-height: 1.3;
-            min-height: 5.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'JetBrains Mono', monospace;
-            text-shadow: 0 0 40px rgba(0, 243, 255, 0.06);
-        }
-        .problem .op-symbol {
-            color: #00f3ff;
-            margin: 0 6px;
-        }
-        .problem .eq-symbol {
-            color: rgba(255, 255, 255, 0.25);
-            margin: 0 6px;
-        }
-
-        /* ── answer grid ── */
-        .answers {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin: 14px 0 12px;
-        }
-        .answer-btn {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 18px;
-            padding: 18px 8px;
-            font-size: 1.4rem;
-            font-weight: 600;
-            font-family: 'JetBrains Mono', monospace;
-            color: #fff;
-            cursor: pointer;
-            transition: all 0.18s ease;
-            position: relative;
-            text-align: center;
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            touch-action: manipulation;
-        }
-        .answer-btn:hover:not(:disabled) {
-            background: rgba(0, 243, 255, 0.06);
-            border-color: rgba(0, 243, 255, 0.2);
-            transform: translateY(-1px);
-        }
-        .answer-btn:active:not(:disabled) {
-            transform: scale(0.95);
-        }
-        .answer-btn:disabled {
-            opacity: 0.4;
-            cursor: default;
-            transform: none;
-        }
-        .answer-btn.correct {
-            background: rgba(68, 255, 170, 0.15);
-            border-color: #44ffaa;
-            color: #44ffaa;
-            box-shadow: 0 0 30px rgba(68, 255, 170, 0.08);
-        }
-        .answer-btn.wrong {
-            background: rgba(255, 0, 68, 0.15);
-            border-color: #ff0044;
-            color: #ff0044;
-            box-shadow: 0 0 30px rgba(255, 0, 68, 0.08);
-        }
-        .answer-btn .sub {
-            display: block;
-            font-size: 0.55rem;
+        .brand small {
             font-weight: 400;
-            font-family: 'Inter', sans-serif;
-            opacity: 0.3;
-            margin-top: 2px;
+            font-size: 0.7rem;
+            opacity: 0.5;
+            margin-left: 4px;
             letter-spacing: 0.05em;
         }
-
-        /* ── bottom bar ── */
-        .bottom-info {
+        .header-controls {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-top: 10px;
-            font-size: 0.7rem;
-            color: rgba(255, 255, 255, 0.3);
-            font-family: 'JetBrains Mono', monospace;
-            padding: 0 4px;
+            gap: 12px;
         }
-        .bottom-info .timer {
-            color: rgba(255, 255, 255, 0.5);
-        }
-        .bottom-info .timer .val {
-            color: #00f3ff;
-            font-weight: 700;
-        }
-        .bottom-info .combo {
+        .header-controls button {
+            background: var(--btn-bg);
+            border: 1px solid var(--btn-border);
+            border-radius: 30px;
+            padding: 6px 14px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--btn-color);
+            cursor: pointer;
+            transition: background 0.25s, transform 0.15s, border-color 0.25s;
+            font-family: 'Inter', sans-serif;
             display: flex;
             align-items: center;
             gap: 6px;
+            backdrop-filter: blur(4px);
         }
-        .bottom-info .combo .val {
-            color: #ffbb33;
-            font-weight: 700;
-            font-size: 0.9rem;
+        .header-controls button:hover {
+            background: var(--answer-hover);
+            transform: scale(1.02);
         }
-        .bottom-info .combo .label {
-            opacity: 0.5;
+        .header-controls button:active {
+            transform: scale(0.95);
+        }
+        .header-controls .lang-btn {
+            min-width: 48px;
+            justify-content: center;
         }
 
-        /* ── feedback overlay ── */
-        .feedback {
+        .nav {
+            display: flex;
+            gap: 12px 24px;
+            flex-wrap: wrap;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        .nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.25s, border-color 0.25s;
+            border-bottom: 2px solid transparent;
+            padding-bottom: 4px;
+        }
+        .nav a:hover {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        /* ----- hero section ----- */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 30px 0 10px;
+            border-bottom: 1px solid var(--border-color);
+            transition: border-color 0.4s;
+        }
+        .hero h1 {
+            font-size: clamp(2.4rem, 8vw, 4.2rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 60%, #7a5cff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            transition: background 0.4s;
+        }
+        .hero .tagline {
+            font-size: 1.1rem;
+            font-weight: 300;
+            color: var(--text-secondary);
+            max-width: 600px;
+            letter-spacing: 0.02em;
+        }
+        .hero .tagline strong {
+            color: var(--accent);
+            font-weight: 400;
+        }
+
+        /* ----- sections: card style ----- */
+        .section {
+            background: var(--bg-card);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid var(--border-color);
+            border-radius: 32px;
+            padding: 30px 28px;
+            box-shadow: var(--card-shadow);
+            transition: border-color 0.4s, box-shadow 0.4s, background 0.4s;
+        }
+        .section:hover {
+            border-color: var(--border-hover);
+        }
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-primary);
+        }
+        .section-title .accent {
+            color: var(--accent);
+        }
+        .section-title .sub {
+            font-size: 0.7rem;
+            font-weight: 400;
+            color: var(--text-muted);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        /* ----- about grid ----- */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px 30px;
+        }
+        @media (max-width: 700px) {
+            .about-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .about-item h4 {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--accent);
+            margin-bottom: 4px;
+            opacity: 0.7;
+        }
+        .about-item p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+        .about-item .highlight {
+            color: var(--highlight);
+            font-weight: 500;
+        }
+
+        /* ----- services cards ----- */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 18px;
+        }
+        .service-card {
+            background: var(--answer-bg);
+            border: 1px solid var(--answer-border);
+            border-radius: 20px;
+            padding: 18px 16px;
+            transition: background 0.25s, border-color 0.25s, transform 0.2s;
+            text-align: center;
+            color: var(--text-primary);
+        }
+        .service-card:hover {
+            background: var(--answer-hover);
+            border-color: var(--border-hover);
+            transform: translateY(-3px);
+        }
+        .service-card .emoji {
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 6px;
+        }
+        .service-card h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .service-card p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        /* ----- game card (embedded) ----- */
+        .game-section .game-card {
+            background: var(--game-card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 28px;
+            padding: 24px 22px 22px;
+            max-width: 560px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            transition: background 0.4s, border-color 0.4s;
+        }
+        .game-section .game-card .problem {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.4rem;
+            text-align: center;
+            padding: 12px 0;
+            color: var(--text-primary);
+        }
+        .game-section .game-card .answers {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 14px 0 10px;
+        }
+        .game-section .game-card .answer-btn {
+            background: var(--answer-bg);
+            border: 1px solid var(--answer-border);
+            border-radius: 16px;
+            padding: 16px 6px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: center;
+            touch-action: manipulation;
+        }
+        .game-section .game-card .answer-btn:hover:not(:disabled) {
+            background: var(--answer-hover);
+            border-color: var(--border-hover);
+        }
+        .game-section .game-card .answer-btn:active:not(:disabled) {
+            transform: scale(0.94);
+        }
+        .game-section .game-card .answer-btn:disabled {
+            opacity: 0.4;
+            cursor: default;
+        }
+        .game-section .game-card .answer-btn.correct {
+            background: rgba(68, 255, 170, 0.15);
+            border-color: #44ffaa;
+            color: #44ffaa;
+        }
+        .game-section .game-card .answer-btn.wrong {
+            background: rgba(255, 0, 68, 0.15);
+            border-color: #ff0044;
+            color: #ff0044;
+        }
+        .game-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-muted);
+            padding: 6px 4px 0;
+            flex-wrap: wrap;
+            gap: 4px 10px;
+        }
+        .game-stats .val {
+            color: var(--accent);
+            font-weight: 700;
+        }
+        .game-stats .gold {
+            color: var(--gold);
+        }
+        .game-feedback {
             position: absolute;
             inset: 0;
             display: flex;
@@ -302,175 +422,302 @@
             pointer-events: none;
             opacity: 0;
             transition: opacity 0.15s;
-            border-radius: 36px;
-            background: rgba(6, 6, 14, 0.3);
-            backdrop-filter: blur(2px);
-            -webkit-backdrop-filter: blur(2px);
+            border-radius: 28px;
+            background: var(--feedback-bg);
+            backdrop-filter: blur(4px);
         }
-        .feedback.show {
+        .game-feedback.show {
             opacity: 1;
         }
-        .feedback.correct {
+        .game-feedback.correct {
             color: #44ffaa;
-            text-shadow: 0 0 60px rgba(68, 255, 170, 0.3);
         }
-        .feedback.wrong {
+        .game-feedback.wrong {
             color: #ff0044;
-            text-shadow: 0 0 60px rgba(255, 0, 68, 0.3);
         }
 
-        /* ── watermark footer ── */
-        .watermark {
-            position: fixed;
-            bottom: 14px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            font-size: 0.55rem;
-            color: rgba(255, 255, 255, 0.12);
-            letter-spacing: 0.12em;
-            font-weight: 300;
-            z-index: 20;
-            pointer-events: none;
+        /* ----- search section ----- */
+        .search-box {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            margin-top: 8px;
+        }
+        .search-box input {
+            flex: 1;
+            min-width: 200px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 40px;
+            padding: 14px 22px;
+            font-size: 1rem;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
+        }
+        .search-box input:focus {
+            border-color: var(--input-focus);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.04);
+        }
+        .search-box input::placeholder {
+            color: var(--text-muted);
+        }
+        .search-box button {
+            background: var(--btn-bg);
+            border: 1px solid var(--btn-border);
+            border-radius: 40px;
+            padding: 14px 32px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--btn-color);
+            cursor: pointer;
+            transition: background 0.25s, transform 0.15s;
             font-family: 'Inter', sans-serif;
         }
-        .watermark strong {
-            color: rgba(255, 255, 255, 0.18);
-            font-weight: 500;
+        .search-box button:hover {
+            background: var(--answer-hover);
+            transform: scale(1.02);
         }
-        .watermark .dot {
-            color: rgba(0, 243, 255, 0.15);
-            margin: 0 4px;
+        .search-box button:active {
+            transform: scale(0.95);
+        }
+        .search-hint {
+            text-align: center;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 8px;
+            letter-spacing: 0.05em;
+        }
+        .search-hint kbd {
+            background: var(--input-bg);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--text-secondary);
         }
 
-        /* ── responsive ── */
-        @media (max-width: 480px) {
-            .top-bar {
-                padding: 10px 14px;
-                font-size: 0.6rem;
-            }
-            .top-bar .brand {
-                font-size: 0.7rem;
-            }
-            .top-bar .stats {
-                gap: 10px;
-                font-size: 0.6rem;
-            }
-            .top-bar .stats .val {
-                font-size: 0.75rem;
-            }
-            .game-card {
-                padding: 20px 16px 18px;
-                border-radius: 28px;
-            }
-            .problem {
-                font-size: 2rem;
-                min-height: 4rem;
-                padding: 10px 0;
-            }
-            .answers {
-                gap: 8px;
-            }
-            .answer-btn {
-                padding: 14px 6px;
-                font-size: 1.1rem;
-                border-radius: 14px;
-            }
-            .feedback {
-                font-size: 2.8rem;
-                border-radius: 28px;
-            }
-            .bottom-info {
-                font-size: 0.6rem;
-            }
-            .watermark {
-                font-size: 0.45rem;
-                bottom: 8px;
-            }
+        /* ----- footer ----- */
+        .footer {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            font-size: 0.7rem;
+            color: var(--footer-color);
+            letter-spacing: 0.04em;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            transition: border-color 0.4s, color 0.4s;
         }
-        @media (max-width: 380px) {
-            .problem {
-                font-size: 1.6rem;
+        .footer a {
+            color: var(--footer-color);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .footer a:hover {
+            color: var(--accent);
+        }
+        .footer .dot {
+            color: var(--accent);
+            opacity: 0.2;
+        }
+
+        /* ----- responsive tweaks ----- */
+        @media (max-width: 600px) {
+            .app-wrapper {
+                padding: 12px 16px 30px;
+                gap: 30px;
             }
-            .answer-btn {
-                font-size: 0.95rem;
+            .section {
+                padding: 20px 16px;
+                border-radius: 24px;
+            }
+            .game-section .game-card {
+                padding: 16px 14px;
+            }
+            .game-section .game-card .problem {
+                font-size: 1.8rem;
+            }
+            .game-section .game-card .answer-btn {
+                font-size: 1rem;
                 padding: 12px 4px;
             }
-            .game-card {
-                padding: 16px 12px 14px;
+            .search-box input {
+                min-width: 140px;
+                padding: 12px 16px;
+                font-size: 0.9rem;
             }
-            .top-bar .stats {
-                gap: 6px;
+            .search-box button {
+                padding: 12px 20px;
+                font-size: 0.85rem;
+            }
+            .header-controls button {
+                font-size: 0.7rem;
+                padding: 4px 10px;
             }
         }
 
-        /* ── scrollbar hide ── */
-        ::-webkit-scrollbar {
-            display: none;
+        /* ----- utility ----- */
+        .text-glow {
+            text-shadow: 0 0 40px currentColor;
         }
-
-        /* ── utility ── */
         .hidden {
             display: none !important;
         }
-        .text-glow {
-            text-shadow: 0 0 30px currentColor;
+        .mt-1 {
+            margin-top: 8px;
+        }
+        .text-center {
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
-    <!-- ====== CANVAS BACKGROUND ====== -->
+    <!-- ====== BACKGROUND CANVAS ====== -->
     <canvas id="bg-canvas"></canvas>
 
-    <!-- ====== TOP BAR ====== -->
-    <header class="top-bar">
-        <div class="brand">
-            <span>🧠</span> Brain<span>Singularity</span>
-        </div>
-        <div class="stats">
-            <span>SCORE <span class="val" id="scoreDisplay">0</span></span>
-            <span>BEST <span class="val gold" id="bestDisplay">0</span></span>
-            <span>⚡ <span class="val" id="streakDisplay">0</span></span>
-        </div>
-    </header>
+    <!-- ====== MAIN WRAPPER ====== -->
+    <div class="app-wrapper">
 
-    <!-- ====== GAME CARD ====== -->
-    <div id="app">
-        <div class="game-card" id="gameCard">
-            <!-- feedback overlay -->
-            <div class="feedback" id="feedback"></div>
-
-            <div class="card-header">
-                <span>🧠 mental arcade</span>
-                <span class="level" id="levelDisplay">Lv.1</span>
+        <!-- ====== HEADER ====== -->
+        <header class="header">
+            <a href="#" class="brand" id="brandLink">
+                🧠 Kevin<span>Marville</span>
+                <small>· TechAndStream</small>
+            </a>
+            <div class="header-controls">
+                <button class="lang-btn" id="langToggle" title="Français / English">FR</button>
+                <button id="themeToggle" title="Changer de thème">🌙</button>
             </div>
+            <nav class="nav">
+                <a href="#game" data-i18n="nav.game">Jeu</a>
+                <a href="#about" data-i18n="nav.about">À propos</a>
+                <a href="#services" data-i18n="nav.services">Services</a>
+                <a href="#search" data-i18n="nav.search">Recherche</a>
+            </nav>
+        </header>
 
-            <div class="problem" id="problemDisplay">
-                8 <span class="op-symbol">×</span> 7 <span class="eq-symbol">=</span> <span style="color:rgba(255,255,255,0.15);">?</span>
+        <!-- ====== HERO ====== -->
+        <section class="hero">
+            <h1 data-i18n="hero.title">CV EN HORS-LIGNE</h1>
+            <p class="tagline" data-i18n-html="hero.tagline">
+                Là où la <strong>philosophie</strong> rencontre le <strong>code</strong> · Agilité mentale pour l'ère numérique.
+            </p>
+        </section>
+
+        <!-- ====== GAME SECTION ====== -->
+        <section class="section game-section" id="game">
+            <div class="section-title">
+                <span class="accent">⚡</span> <span data-i18n="game.title">Arcade Mentale</span>
+                <span class="sub" data-i18n="game.subtitle">· entraîne ta logique</span>
             </div>
+            <div class="game-card" id="gameCard">
+                <!-- feedback overlay -->
+                <div class="game-feedback" id="gameFeedback"></div>
 
-            <div class="answers" id="answersContainer">
-                <button class="answer-btn" data-index="0">56 <span class="sub">A</span></button>
-                <button class="answer-btn" data-index="1">49 <span class="sub">B</span></button>
-                <button class="answer-btn" data-index="2">63 <span class="sub">C</span></button>
-                <button class="answer-btn" data-index="3">42 <span class="sub">D</span></button>
+                <div class="problem" id="problemDisplay">
+                    8 <span style="color:var(--accent);">×</span> 7 <span style="color:var(--text-muted);">=</span> <span style="color:var(--text-muted);opacity:0.3;">?</span>
+                </div>
+
+                <div class="answers" id="answersContainer">
+                    <button class="answer-btn" data-index="0">56</button>
+                    <button class="answer-btn" data-index="1">49</button>
+                    <button class="answer-btn" data-index="2">63</button>
+                    <button class="answer-btn" data-index="3">42</button>
+                </div>
+
+                <div class="game-stats">
+                    <span><span data-i18n="game.score">SCORE</span> <span class="val" id="scoreDisplay">0</span></span>
+                    <span><span data-i18n="game.best">MEILLEUR</span> <span class="val gold" id="bestDisplay">0</span></span>
+                    <span><span data-i18n="game.combo">COMBO</span> <span class="val gold" id="comboDisplay">0</span></span>
+                    <span><span data-i18n="game.timer">⏱</span> <span class="val" id="timerDisplay">0.0</span>s</span>
+                </div>
             </div>
+        </section>
 
-            <div class="bottom-info">
-                <span class="timer">⏱ <span class="val" id="timerDisplay">0.0</span>s</span>
-                <span class="combo">
-                    <span class="label">🔥 combo</span>
-                    <span class="val" id="comboDisplay">0</span>
-                </span>
+        <!-- ====== ABOUT ====== -->
+        <section class="section" id="about">
+            <div class="section-title">
+                <span class="accent">◈</span> <span data-i18n="about.title">À propos</span>
+                <span class="sub" data-i18n="about.subtitle">· philosophie &amp; technologie</span>
             </div>
-        </div>
-    </div>
+            <div class="about-grid">
+                <div class="about-item" data-i18n-item="about.0">
+                    <h4 data-i18n="about.0.h4">Parcours académique</h4>
+                    <p data-i18n-html="about.0.p">Double Master en Philosophie Contemporaine (Lyon 3 &amp; Bologna). Recherche centrée sur l'<span class="highlight">IA éthique</span>, l'<span class="highlight">individuation numérique</span> (Simondon, Stiegler) et la philosophie de la technologie.</p>
+                </div>
+                <div class="about-item" data-i18n-item="about.1">
+                    <h4 data-i18n="about.1.h4">Tech &amp; Entrepreneuriat</h4>
+                    <p data-i18n-html="about.1.p">Développeur full‑stack (RNCP Bac+5) et fondateur de <span class="highlight">TechAndStream</span>. 8 ans dans l'Armée de Terre m'ont appris la rigueur, la gestion de crise et le service centré sur l'humain — désormais appliqués à l'inclusion numérique.</p>
+                </div>
+                <div class="about-item" data-i18n-item="about.2">
+                    <h4 data-i18n="about.2.h4">Soin &amp; Accompagnement</h4>
+                    <p data-i18n-html="about.2.p">Passionné par l'<span class="highlight">autonomie numérique</span> des personnes âgées et vulnérables. J'offre une assistance patiente et pédagogique pour aider à naviguer en ligne avec confiance et sécurité.</p>
+                </div>
+                <div class="about-item" data-i18n-item="about.3">
+                    <h4 data-i18n="about.3.h4">Ancrage philosophique</h4>
+                    <p data-i18n-html="about.3.p">Inspiré par Arendt, Mbembe, Byung‑Chul Han et Stiegler. Mon travail explore la <span class="highlight">responsabilité algorithmique</span>, la pharmacologie des outils numériques et l'éthique de la surveillance.</p>
+                </div>
+            </div>
+        </section>
 
-    <!-- ====== WATERMARK ====== -->
-    <div class="watermark">
-        <strong>Kevin Marville</strong> <span class="dot">·</span> TechAndStream <span class="dot">·</span> 2026
-        <span style="margin:0 8px;opacity:0.2;">|</span> kvnbbg.fr <span class="dot">·</span> kvnbbg-creations.io
+        <!-- ====== SERVICES ====== -->
+        <section class="section" id="services">
+            <div class="section-title">
+                <span class="accent">✦</span> <span data-i18n="services.title">Services</span>
+                <span class="sub" data-i18n="services.subtitle">· ce que je propose</span>
+            </div>
+            <div class="services-grid">
+                <div class="service-card" data-i18n-item="services.0">
+                    <span class="emoji">🧑‍💻</span>
+                    <h4 data-i18n="services.0.h4">Coaching numérique</h4>
+                    <p data-i18n="services.0.p">Accompagnement personnalisé pour ordinateurs, tablettes et smartphones. Explications simples, sans jargon.</p>
+                </div>
+                <div class="service-card" data-i18n-item="services.1">
+                    <span class="emoji">🛡️</span>
+                    <h4 data-i18n="services.1.h4">Sécurité &amp; Vie privée</h4>
+                    <p data-i18n="services.1.p">Apprenez à reconnaître les arnaques, protéger vos données et naviguer en toute sécurité.</p>
+                </div>
+                <div class="service-card" data-i18n-item="services.2">
+                    <span class="emoji">📚</span>
+                    <h4 data-i18n="services.2.h4">Consulting philosophique</h4>
+                    <p data-i18n="services.2.p">Réflexions éthiques sur la tech, l'IA et la société — pour entreprises, éducateurs et penseurs.</p>
+                </div>
+                <div class="service-card" data-i18n-item="services.3">
+                    <span class="emoji">⚙️</span>
+                    <h4 data-i18n="services.3.h4">Développement Full‑Stack</h4>
+                    <p data-i18n="services.3.p">Applications web sur mesure, conception d'API et solutions UX centrées sur vos besoins.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====== SEARCH ====== -->
+        <section class="section" id="search">
+            <div class="section-title">
+                <span class="accent">🔍</span> <span data-i18n="search.title">Recherche ouverte</span>
+                <span class="sub" data-i18n="search.subtitle">· explorez avec intention</span>
+            </div>
+            <form class="search-box" id="searchForm" action="https://www.google.com/search" method="get" target="_blank">
+                <input type="text" name="q" data-i18n-placeholder="search.placeholder" placeholder="Rechercher sur le web …" aria-label="Recherche" />
+                <button type="submit" data-i18n="search.button">Rechercher</button>
+            </form>
+            <div class="search-hint" data-i18n-html="search.hint">
+                Appuyez sur <kbd>Ctrl</kbd>+<kbd>K</kbd> pour cibler · OpenSearch activé
+            </div>
+        </section>
+
+        <!-- ====== FOOTER ====== -->
+        <footer class="footer" id="footer" data-i18n-html="footer">
+            © 2026 <strong>Kevin Marville</strong> · TechAndStream · techandstream.com · kvnbbg.fr · kvnbbg-creations.io · Tous droits réservés
+        </footer>
+
     </div>
 
     <!-- ============================================================ -->
@@ -479,23 +726,9 @@
         (function() {
             'use strict';
 
-            // ─── DOM refs ──────────────────────────────────────────────
+            // ─── canvas & particles (transparent background) ────────
             const canvas = document.getElementById('bg-canvas');
             const ctx = canvas.getContext('2d');
-
-            const scoreDisplay = document.getElementById('scoreDisplay');
-            const bestDisplay = document.getElementById('bestDisplay');
-            const streakDisplay = document.getElementById('streakDisplay');
-            const comboDisplay = document.getElementById('comboDisplay');
-            const timerDisplay = document.getElementById('timerDisplay');
-            const levelDisplay = document.getElementById('levelDisplay');
-            const problemDisplay = document.getElementById('problemDisplay');
-            const answersContainer = document.getElementById('answersContainer');
-            const answerBtns = answersContainer.querySelectorAll('.answer-btn');
-            const feedbackEl = document.getElementById('feedback');
-            const gameCard = document.getElementById('gameCard');
-
-            // ─── canvas sizing ────────────────────────────────────────
             let W, H;
 
             function resizeCanvas() {
@@ -505,274 +738,163 @@
             window.addEventListener('resize', resizeCanvas);
             resizeCanvas();
 
-            // ─── particle system ──────────────────────────────────────
-            const PARTICLE_COUNT = 280;
+            const PARTICLE_COUNT = 200;
             const particles = [];
-            const mouse = { x: -9999, y: -9999, px: -9999, py: -9999, vx: 0, vy: 0 };
+            const mouse = { x: -9999, y: -9999 };
 
             class Particle {
                 constructor() {
-                    this.reset(true);
-                }
-                reset(init) {
                     this.x = Math.random() * W;
                     this.y = Math.random() * H;
-                    this.size = 1.2 + Math.random() * 2.6;
-                    this.speed = 0.08 + Math.random() * 0.22;
+                    this.size = 1.2 + Math.random() * 2.4;
+                    this.speed = 0.06 + Math.random() * 0.18;
                     this.angle = Math.random() * Math.PI * 2;
-                    this.drift = 0.002 + Math.random() * 0.006;
-                    this.opacity = 0.15 + Math.random() * 0.45;
-                    this.hue = 200 + Math.random() * 40; // 200–240 (blue-cyan)
-                    if (!init) {
-                        // occasionally spawn with warmer hue
-                        if (Math.random() < 0.15) this.hue = 30 + Math.random() * 30;
-                    }
+                    this.drift = 0.003 + Math.random() * 0.005;
+                    this.opacity = 0.1 + Math.random() * 0.35;
+                    this.hue = 200 + Math.random() * 40;
                     this.pulse = Math.random() * Math.PI * 2;
-                    this.pulseSpeed = 0.01 + Math.random() * 0.025;
+                    this.pulseSpeed = 0.01 + Math.random() * 0.02;
                 }
                 update() {
                     this.pulse += this.pulseSpeed;
-                    const driftX = Math.sin(this.pulse * 0.7 + this.y * 0.003) * this.drift;
-                    const driftY = Math.cos(this.pulse * 0.5 + this.x * 0.003) * this.drift;
-
-                    // mouse influence
-                    let dx = mouse.x - this.x;
-                    let dy = mouse.y - this.y;
+                    const dx = mouse.x - this.x;
+                    const dy = mouse.y - this.y;
                     const dist = Math.sqrt(dx * dx + dy * dy);
-                    let influence = 0;
-                    if (dist < 180 && dist > 0) {
-                        influence = (1 - dist / 180) * 0.6;
-                        const angle = Math.atan2(dy, dx);
-                        this.x += Math.cos(angle) * influence * 1.2;
-                        this.y += Math.sin(angle) * influence * 1.2;
+                    if (dist < 150 && dist > 0) {
+                        const influence = (1 - dist / 150) * 0.5;
+                        const ang = Math.atan2(dy, dx);
+                        this.x += Math.cos(ang) * influence * 1.2;
+                        this.y += Math.sin(ang) * influence * 1.2;
                     }
-                    // gentle repulsion from mouse when very close
-                    if (dist < 40 && dist > 0) {
-                        const angle = Math.atan2(dy, dx);
-                        const push = (1 - dist / 40) * 0.8;
-                        this.x -= Math.cos(angle) * push * 1.8;
-                        this.y -= Math.sin(angle) * push * 1.8;
-                    }
-
-                    // drift + speed
-                    this.x += Math.cos(this.angle + this.pulse * 0.3) * this.speed * 0.4 + driftX;
-                    this.y += Math.sin(this.angle + this.pulse * 0.2) * this.speed * 0.4 + driftY;
-
-                    // wrap
+                    this.x += Math.cos(this.angle + this.pulse * 0.3) * this.speed * 0.4 +
+                        Math.sin(this.pulse * 0.7 + this.y * 0.003) * this.drift;
+                    this.y += Math.sin(this.angle + this.pulse * 0.2) * this.speed * 0.4 +
+                        Math.cos(this.pulse * 0.5 + this.x * 0.003) * this.drift;
                     if (this.x < -20) this.x = W + 20;
                     if (this.x > W + 20) this.x = -20;
                     if (this.y < -20) this.y = H + 20;
                     if (this.y > H + 20) this.y = -20;
-
-                    // occasional hue shift
-                    if (Math.random() < 0.001) {
-                        this.hue = 190 + Math.random() * 60;
-                    }
                 }
                 draw() {
-                    const alpha = this.opacity * (0.7 + 0.3 * Math.sin(this.pulse));
+                    const alpha = this.opacity * (0.6 + 0.4 * Math.sin(this.pulse));
                     const size = this.size * (0.8 + 0.2 * Math.sin(this.pulse * 0.6));
+                    const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, size * 3);
+                    grad.addColorStop(0, `hsla(${this.hue}, 90%, 75%, ${alpha * 0.6})`);
+                    grad.addColorStop(0.6, `hsla(${this.hue + 10}, 80%, 50%, ${alpha * 0.2})`);
+                    grad.addColorStop(1, `hsla(${this.hue + 20}, 70%, 30%, 0)`);
                     ctx.beginPath();
                     ctx.arc(this.x, this.y, size, 0, Math.PI * 2);
-                    const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, size * 3);
-                    grad.addColorStop(0, `hsla(${this.hue}, 90%, 75%, ${alpha * 0.7})`);
-                    grad.addColorStop(0.5, `hsla(${this.hue + 10}, 80%, 50%, ${alpha * 0.3})`);
-                    grad.addColorStop(1, `hsla(${this.hue + 20}, 70%, 30%, 0)`);
                     ctx.fillStyle = grad;
                     ctx.fill();
-
-                    // core glow
+                    // core
                     ctx.beginPath();
-                    ctx.arc(this.x, this.y, size * 0.3, 0, Math.PI * 2);
-                    ctx.fillStyle = `hsla(${this.hue + 20}, 100%, 90%, ${alpha * 0.3})`;
+                    ctx.arc(this.x, this.y, size * 0.2, 0, Math.PI * 2);
+                    ctx.fillStyle = `hsla(${this.hue + 20}, 100%, 90%, ${alpha * 0.2})`;
                     ctx.fill();
                 }
             }
 
-            // init particles
             for (let i = 0; i < PARTICLE_COUNT; i++) {
                 particles.push(new Particle());
             }
 
-            // ─── mouse / touch tracking ──────────────────────────────
-            function handleMove(x, y) {
-                mouse.px = mouse.x;
-                mouse.py = mouse.y;
-                mouse.x = x;
-                mouse.y = y;
-                mouse.vx = mouse.x - mouse.px;
-                mouse.vy = mouse.y - mouse.py;
-            }
-
+            // mouse tracking
             window.addEventListener('mousemove', (e) => {
-                handleMove(e.clientX, e.clientY);
+                mouse.x = e.clientX;
+                mouse.y = e.clientY;
             });
             window.addEventListener('touchmove', (e) => {
                 const t = e.touches[0];
-                if (t) handleMove(t.clientX, t.clientY);
+                if (t) { mouse.x = t.clientX;
+                    mouse.y = t.clientY; }
             }, { passive: true });
             window.addEventListener('touchstart', (e) => {
                 const t = e.touches[0];
-                if (t) handleMove(t.clientX, t.clientY);
+                if (t) { mouse.x = t.clientX;
+                    mouse.y = t.clientY; }
             }, { passive: true });
-            window.addEventListener('mouseleave', () => {
-                mouse.x = -9999;
-                mouse.y = -9999;
-            });
+            window.addEventListener('mouseleave', () => { mouse.x = -9999;
+                mouse.y = -9999; });
 
-            // ─── click burst effect ──────────────────────────────────
-            function burstParticles(cx, cy, count = 40, hue = 200) {
-                for (let i = 0; i < count; i++) {
-                    const p = new Particle();
-                    p.x = cx + (Math.random() - 0.5) * 20;
-                    p.y = cy + (Math.random() - 0.5) * 20;
-                    p.hue = hue + (Math.random() - 0.5) * 30;
-                    p.size = 1 + Math.random() * 3;
-                    p.opacity = 0.4 + Math.random() * 0.5;
-                    const angle = Math.random() * Math.PI * 2;
-                    const speed = 1 + Math.random() * 4;
-                    p._vx = Math.cos(angle) * speed;
-                    p._vy = Math.sin(angle) * speed;
-                    p._life = 1;
-                    p._decay = 0.008 + Math.random() * 0.015;
-                    p._isBurst = true;
-                    particles.push(p);
-                }
-                // also push some trailing particles
-                for (let i = 0; i < 20; i++) {
-                    const p = new Particle();
-                    p.x = cx + (Math.random() - 0.5) * 60;
-                    p.y = cy + (Math.random() - 0.5) * 60;
-                    p.hue = hue + 20 + (Math.random() - 0.5) * 20;
-                    p.size = 0.5 + Math.random() * 1.5;
-                    p.opacity = 0.2 + Math.random() * 0.3;
-                    p._vx = (Math.random() - 0.5) * 2;
-                    p._vy = (Math.random() - 0.5) * 2;
-                    p._life = 1;
-                    p._decay = 0.01 + Math.random() * 0.02;
-                    p._isBurst = true;
-                    particles.push(p);
-                }
-            }
-
-            // ─── draw background ──────────────────────────────────────
             function drawBg() {
-                // subtle gradient
-                const grad = ctx.createRadialGradient(W * 0.5, H * 0.5, 0, W * 0.5, H * 0.5, Math.max(W, H) * 0.7);
-                grad.addColorStop(0, '#0a0a1a');
-                grad.addColorStop(0.5, '#06060e');
-                grad.addColorStop(1, '#020208');
-                ctx.fillStyle = grad;
-                ctx.fillRect(0, 0, W, H);
-
-                // very faint stars
-                ctx.fillStyle = 'rgba(255,255,255,0.015)';
-                for (let i = 0; i < 60; i++) {
+                // clear to transparent (body background shows through)
+                ctx.clearRect(0, 0, W, H);
+                // faint stars (semi-transparent, will adapt to theme via CSS var)
+                // we use a fixed low opacity, but it's fine
+                ctx.fillStyle = 'rgba(255,255,255,0.012)';
+                for (let i = 0; i < 50; i++) {
                     const sx = (i * 137.508) % W;
                     const sy = (i * 97.31 + 50) % H;
-                    const sz = 0.5 + (i % 3) * 0.5;
+                    const sz = 0.5 + (i % 3) * 0.4;
                     ctx.beginPath();
                     ctx.arc(sx, sy, sz, 0, Math.PI * 2);
                     ctx.fill();
                 }
             }
 
-            // ─── animation loop ──────────────────────────────────────
             function animateParticles() {
-                // update & draw
-                for (let i = particles.length - 1; i >= 0; i--) {
-                    const p = particles[i];
-                    if (p._isBurst) {
-                        p.x += p._vx || 0;
-                        p.y += p._vy || 0;
-                        p._vx = (p._vx || 0) * 0.99;
-                        p._vy = (p._vy || 0) * 0.99;
-                        p._life -= p._decay || 0.01;
-                        p.opacity = (p._life || 0) * 0.6;
-                        p.size *= 0.998;
-                        if (p._life <= 0 || p.size < 0.1) {
-                            particles.splice(i, 1);
-                            continue;
-                        }
-                        p.draw();
-                    } else {
-                        p.update();
-                        p.draw();
-                    }
+                for (const p of particles) {
+                    p.update();
+                    p.draw();
                 }
-                // keep particle count healthy
                 while (particles.length < PARTICLE_COUNT) {
                     particles.push(new Particle());
                 }
-                if (particles.length > PARTICLE_COUNT + 120) {
-                    // remove oldest non-burst
-                    for (let i = particles.length - 1; i >= 0; i--) {
-                        if (!particles[i]._isBurst) {
-                            particles.splice(i, 1);
-                            break;
-                        }
-                    }
+                if (particles.length > PARTICLE_COUNT + 30) {
+                    particles.splice(0, particles.length - PARTICLE_COUNT);
                 }
             }
 
-            // ─── game state ──────────────────────────────────────────
+            function frame() {
+                drawBg();
+                animateParticles();
+                requestAnimationFrame(frame);
+            }
+            frame();
+
+            // ─── game logic ──────────────────────────────────────────
+
             const state = {
                 score: 0,
                 best: parseInt(localStorage.getItem('brainSingularityBest')) || 0,
-                streak: 0,
                 combo: 0,
                 level: 1,
-                correct: 0,
-                wrong: 0,
-                total: 0,
                 answer: 0,
                 choices: [],
                 correctIndex: -1,
                 isLocked: false,
                 timer: 0,
                 maxTimer: 8,
-                questionCount: 0,
+                total: 0,
             };
 
-            // DOM sync
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            const bestDisplay = document.getElementById('bestDisplay');
+            const comboDisplay = document.getElementById('comboDisplay');
+            const timerDisplay = document.getElementById('timerDisplay');
+            const problemDisplay = document.getElementById('problemDisplay');
+            const answersContainer = document.getElementById('answersContainer');
+            const answerBtns = answersContainer.querySelectorAll('.answer-btn');
+            const feedbackEl = document.getElementById('gameFeedback');
+            const gameCard = document.getElementById('gameCard');
+
             function updateUI() {
                 scoreDisplay.textContent = state.score;
                 bestDisplay.textContent = state.best;
-                streakDisplay.textContent = state.streak;
                 comboDisplay.textContent = state.combo;
-                levelDisplay.textContent = `Lv.${state.level}`;
             }
 
-            // ─── generate problem ────────────────────────────────────
             function generateProblem() {
                 const lv = state.level;
                 let a, b, op, answer, display;
-
-                // pick operation based on level
-                const ops = [];
-                if (lv <= 2) {
-                    ops.push('+', '+', '-', '×');
-                } else if (lv <= 4) {
-                    ops.push('+', '-', '×', '×', '÷');
-                } else {
-                    ops.push('+', '-', '×', '÷', '×', '÷');
-                }
+                const ops = lv <= 2 ? ['+', '+', '-', '×'] : lv <= 4 ? ['+', '-', '×', '×', '÷'] : ['+', '-', '×', '÷', '×',
+                    '÷'
+                ];
                 op = ops[Math.floor(Math.random() * ops.length)];
-
-                // number ranges
-                let maxA, maxB;
-                if (lv <= 2) {
-                    maxA = 9 + lv * 3;
+                let maxA = 9 + lv * 3,
                     maxB = 9 + lv * 2;
-                } else if (lv <= 4) {
-                    maxA = 12 + lv * 5;
-                    maxB = 10 + lv * 3;
-                } else {
-                    maxA = 20 + lv * 4;
-                    maxB = 15 + lv * 2;
-                }
-
-                // ensure division gives integer result
+                if (lv > 4) { maxA = 20 + lv * 4;
+                    maxB = 15 + lv * 2; }
                 let attempts = 0;
                 while (attempts < 30) {
                     a = Math.floor(Math.random() * maxA) + 1;
@@ -788,25 +910,22 @@
                     if (op === '×') { answer = a * b;
                         display = `${a} × ${b}`; break; }
                     if (op === '÷') {
-                        if (b === 0) { b = 1; }
+                        if (b === 0) b = 1;
                         if (a % b === 0 && a / b > 0) { answer = a / b;
                             display = `${a} ÷ ${b}`; break; } else {
-                            // make it divisible
                             b = Math.floor(Math.random() * 8) + 1;
-                            const multiplier = Math.floor(Math.random() * 8) + 1;
-                            a = b * multiplier;
-                            answer = multiplier;
+                            const mult = Math.floor(Math.random() * 8) + 1;
+                            a = b * mult;
+                            answer = mult;
                             display = `${a} ÷ ${b}`;
                             break;
                         }
                     }
                     attempts++;
                 }
-                // fallback
                 if (attempts >= 30) {
                     a = Math.floor(Math.random() * 9) + 2;
                     b = Math.floor(Math.random() * 9) + 2;
-                    op = '+';
                     answer = a + b;
                     display = `${a} + ${b}`;
                 }
@@ -814,38 +933,26 @@
                 state.answer = answer;
                 state.total++;
 
-                // build choices (3 wrong + 1 correct)
                 const choices = new Set();
                 choices.add(answer);
                 let offset = Math.max(1, Math.floor(Math.abs(answer) * 0.08) + 1);
-                if (offset < 1) offset = 1;
                 let attempts2 = 0;
                 while (choices.size < 4 && attempts2 < 100) {
                     attempts2++;
                     let wrong;
                     const variant = Math.random();
-                    if (variant < 0.3) {
-                        wrong = answer + Math.floor(Math.random() * offset * 2) - offset;
-                    } else if (variant < 0.6) {
-                        wrong = answer + Math.floor(Math.random() * offset * 4) - offset * 2;
-                    } else {
-                        wrong = answer + (Math.floor(Math.random() * 3) - 1) * (offset + Math.floor(Math.random() * 5));
-                    }
-                    if (wrong !== answer && wrong > 0 && Number.isInteger(wrong)) {
-                        choices.add(wrong);
-                    }
+                    if (variant < 0.3) wrong = answer + Math.floor(Math.random() * offset * 2) - offset;
+                    else if (variant < 0.6) wrong = answer + Math.floor(Math.random() * offset * 4) - offset * 2;
+                    else wrong = answer + (Math.floor(Math.random() * 3) - 1) * (offset + Math.floor(Math.random() * 5));
+                    if (wrong !== answer && wrong > 0 && Number.isInteger(wrong)) choices.add(wrong);
                 }
-                // if still not enough, pad
                 let fallbacks = [answer + 1, answer - 1, answer + 2, answer - 2, answer + 3];
                 let fi = 0;
                 while (choices.size < 4 && fi < fallbacks.length) {
                     const val = fallbacks[fi];
-                    if (val > 0 && val !== answer && Number.isInteger(val)) {
-                        choices.add(val);
-                    }
+                    if (val > 0 && val !== answer && Number.isInteger(val)) choices.add(val);
                     fi++;
                 }
-                // if still not enough, brute force
                 let bf = 1;
                 while (choices.size < 4) {
                     const val = answer + bf;
@@ -853,8 +960,7 @@
                     bf++;
                     if (bf > 20) break;
                 }
-                const choiceArr = Array.from(choices);
-                // shuffle
+                let choiceArr = Array.from(choices);
                 for (let i = choiceArr.length - 1; i > 0; i--) {
                     const j = Math.floor(Math.random() * (i + 1));
                     [choiceArr[i], choiceArr[j]] = [choiceArr[j], choiceArr[i]];
@@ -862,10 +968,8 @@
                 state.choices = choiceArr.slice(0, 4);
                 state.correctIndex = state.choices.indexOf(answer);
                 if (state.correctIndex === -1) {
-                    // fallback: ensure correct is in choices
                     state.choices[0] = answer;
                     state.correctIndex = 0;
-                    // reshuffle
                     for (let i = state.choices.length - 1; i > 0; i--) {
                         const j = Math.floor(Math.random() * (i + 1));
                         [state.choices[i], state.choices[j]] = [state.choices[j], state.choices[i]];
@@ -873,17 +977,13 @@
                     state.correctIndex = state.choices.indexOf(answer);
                 }
 
-                // render
                 const opSymbol = op === '+' ? '+' : op === '-' ? '−' : op === '×' ? '×' : '÷';
                 problemDisplay.innerHTML =
-                    `${a} <span class="op-symbol">${opSymbol}</span> ${b} <span class="eq-symbol">=</span> <span style="color:rgba(255,255,255,0.12);">?</span>`;
+                    `${a} <span style="color:var(--accent);">${opSymbol}</span> ${b} <span style="color:var(--text-muted);">=</span> <span style="color:var(--text-muted);opacity:0.3;">?</span>`;
 
-                const labels = ['A', 'B', 'C', 'D'];
                 answerBtns.forEach((btn, i) => {
                     if (i < state.choices.length) {
                         btn.textContent = state.choices[i];
-                        const sub = btn.querySelector('.sub');
-                        if (sub) sub.textContent = labels[i] || '';
                         btn.style.display = '';
                         btn.className = 'answer-btn';
                         btn.disabled = false;
@@ -895,11 +995,10 @@
                 state.timer = 0;
                 state.isLocked = false;
                 gameCard.className = 'game-card';
-                feedbackEl.className = 'feedback';
+                feedbackEl.className = 'game-feedback';
                 updateUI();
             }
 
-            // ─── handle answer ──────────────────────────────────────
             function handleAnswer(index) {
                 if (state.isLocked) return;
                 if (index < 0 || index >= state.choices.length) return;
@@ -908,102 +1007,71 @@
                 const btn = answerBtns[index];
                 const correctBtn = answerBtns[state.correctIndex];
 
-                // disable all
                 answerBtns.forEach(b => b.disabled = true);
 
-                // highlight
                 if (isCorrect) {
                     btn.classList.add('correct');
                     state.score += Math.max(1, Math.floor(10 + state.level * 1.5 + state.combo * 0.5));
-                    state.correct++;
-                    state.streak++;
                     state.combo++;
                     if (state.score > state.best) {
                         state.best = state.score;
                         localStorage.setItem('brainSingularityBest', String(state.best));
                     }
-                    // burst particles (green)
-                    const rect = btn.getBoundingClientRect();
-                    burstParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, 35, 140);
-                    // feedback
                     feedbackEl.textContent = '✓';
-                    feedbackEl.className = 'feedback correct show';
-                    gameCard.className = 'game-card correct-glow';
+                    feedbackEl.className = 'game-feedback correct show';
+                    gameCard.className = 'game-card';
                 } else {
                     btn.classList.add('wrong');
                     correctBtn.classList.add('correct');
-                    state.wrong++;
-                    state.streak = 0;
                     state.combo = Math.max(0, state.combo - 2);
-                    // burst particles (red)
-                    const rect = btn.getBoundingClientRect();
-                    burstParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, 30, 0);
                     feedbackEl.textContent = '✗';
-                    feedbackEl.className = 'feedback wrong show';
-                    gameCard.className = 'game-card wrong-glow';
+                    feedbackEl.className = 'game-feedback wrong show';
+                    gameCard.className = 'game-card';
                 }
-
-                // update level
                 state.level = Math.max(1, Math.floor(state.score / 50) + 1);
-                // level up burst
-                if (state.level > 1 && state.score % 50 < 5) {
-                    burstParticles(W / 2, H / 2, 50, 190);
-                }
-
                 updateUI();
 
-                // next question after delay
                 setTimeout(() => {
-                    feedbackEl.className = 'feedback';
-                    gameCard.className = 'game-card';
+                    feedbackEl.className = 'game-feedback';
                     generateProblem();
-                    // subtle reset timer
-                    state.timer = 0;
                 }, isCorrect ? 600 : 1000);
             }
 
-            // ─── timer loop ──────────────────────────────────────────
-            let timerInterval = null;
+            // timer loop
+            let timerRAF = null;
             let lastTime = 0;
 
             function startTimer() {
-                if (timerInterval) return;
+                if (timerRAF) return;
                 lastTime = performance.now();
-                timerInterval = requestAnimationFrame(updateTimer);
-            }
 
-            function updateTimer() {
-                const now = performance.now();
-                const delta = (now - lastTime) / 1000;
-                lastTime = now;
-                if (!state.isLocked) {
-                    state.timer += delta;
-                    timerDisplay.textContent = state.timer.toFixed(1);
-                    if (state.timer > state.maxTimer) {
-                        // time's up — auto-fail
-                        state.isLocked = true;
-                        answerBtns.forEach(b => b.disabled = true);
-                        // highlight correct
-                        const correctBtn = answerBtns[state.correctIndex];
-                        if (correctBtn) correctBtn.classList.add('correct');
-                        state.streak = 0;
-                        state.combo = Math.max(0, state.combo - 1);
-                        feedbackEl.textContent = '⏱';
-                        feedbackEl.className = 'feedback wrong show';
-                        gameCard.className = 'game-card wrong-glow';
-                        updateUI();
-                        setTimeout(() => {
-                            feedbackEl.className = 'feedback';
-                            gameCard.className = 'game-card';
-                            generateProblem();
-                            state.timer = 0;
-                        }, 900);
+                function tick() {
+                    const now = performance.now();
+                    const delta = (now - lastTime) / 1000;
+                    lastTime = now;
+                    if (!state.isLocked) {
+                        state.timer += delta;
+                        timerDisplay.textContent = state.timer.toFixed(1);
+                        if (state.timer > state.maxTimer) {
+                            state.isLocked = true;
+                            answerBtns.forEach(b => b.disabled = true);
+                            const correctBtn = answerBtns[state.correctIndex];
+                            if (correctBtn) correctBtn.classList.add('correct');
+                            state.combo = Math.max(0, state.combo - 1);
+                            feedbackEl.textContent = '⏱';
+                            feedbackEl.className = 'game-feedback wrong show';
+                            updateUI();
+                            setTimeout(() => {
+                                feedbackEl.className = 'game-feedback';
+                                generateProblem();
+                            }, 900);
+                        }
                     }
+                    timerRAF = requestAnimationFrame(tick);
                 }
-                timerInterval = requestAnimationFrame(updateTimer);
+                tick();
             }
 
-            // ─── event binding ──────────────────────────────────────
             answerBtns.forEach((btn, idx) => {
                 btn.addEventListener('click', () => handleAnswer(idx));
                 btn.addEventListener('touchend', (e) => {
@@ -1012,58 +1080,192 @@
                 });
             });
 
-            // ─── init game ──────────────────────────────────────────
-            function init() {
-                state.best = parseInt(localStorage.getItem('brainSingularityBest')) || 0;
-                generateProblem();
-                updateUI();
-                startTimer();
-                // kick off animation
-                requestAnimationFrame(function draw() {
-                    drawBg();
-                    animateParticles();
-                    requestAnimationFrame(draw);
-                });
-                // extra click bursts on card
-                gameCard.addEventListener('click', (e) => {
-                    if (!state.isLocked) {
-                        // small ripple on card click
-                        burstParticles(e.clientX, e.clientY, 12, 200);
-                    }
-                });
-            }
-
-            // ─── handle resize for canvas ──────────────────────────
-            window.addEventListener('resize', () => {
-                resizeCanvas();
-            });
-
-            init();
-
-            // ─── keyboard support ──────────────────────────────────
+            // keyboard shortcuts
             document.addEventListener('keydown', (e) => {
                 const keyMap = { '1': 0, '2': 1, '3': 2, '4': 3, 'a': 0, 'b': 1, 'c': 2, 'd': 3 };
                 const idx = keyMap[e.key.toLowerCase()];
                 if (idx !== undefined && !state.isLocked) {
                     handleAnswer(idx);
                 }
-                if (e.key === 'r' || e.key === 'R') {
-                    // reset (hidden shortcut)
-                    if (confirm('Reset score?')) {
-                        state.score = 0;
-                        state.streak = 0;
-                        state.combo = 0;
-                        state.level = 1;
-                        state.correct = 0;
-                        state.wrong = 0;
-                        state.total = 0;
-                        localStorage.removeItem('brainSingularityBest');
-                        state.best = 0;
-                        generateProblem();
-                        updateUI();
-                    }
+                if (e.ctrlKey && e.key === 'k') {
+                    e.preventDefault();
+                    document.querySelector('#searchForm input').focus();
                 }
             });
+
+            generateProblem();
+            updateUI();
+            startTimer();
+
+            // ─── THEME TOGGLE ──────────────────────────────────────
+            const themeBtn = document.getElementById('themeToggle');
+            let currentTheme = 'dark'; // default
+
+            function setTheme(theme) {
+                document.body.classList.toggle('light-mode', theme === 'light');
+                themeBtn.textContent = theme === 'light' ? '☀️' : '🌙';
+                currentTheme = theme;
+                localStorage.setItem('theme', theme);
+            }
+
+            // load saved theme
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') setTheme('light');
+            else setTheme('dark');
+
+            themeBtn.addEventListener('click', () => {
+                const next = currentTheme === 'dark' ? 'light' : 'dark';
+                setTheme(next);
+            });
+
+            // ─── LANGUAGE TOGGLE (FR / EN) ────────────────────────
+            const langBtn = document.getElementById('langToggle');
+            let currentLang = 'fr'; // default
+
+            // Translation dictionary
+            const translations = {
+                fr: {
+                    'nav.game': 'Jeu',
+                    'nav.about': 'À propos',
+                    'nav.services': 'Services',
+                    'nav.search': 'Recherche',
+                    'hero.title': 'Singularité Cérébrale',
+                    'hero.tagline': 'Là où la <strong>philosophie</strong> rencontre le <strong>code</strong> · Agilité mentale pour l\'ère numérique.',
+                    'game.title': 'Arcade Mentale',
+                    'game.subtitle': '· entraîne ta logique',
+                    'game.score': 'SCORE',
+                    'game.best': 'MEILLEUR',
+                    'game.combo': 'COMBO',
+                    'game.timer': '⏱',
+                    'about.title': 'À propos',
+                    'about.subtitle': '· philosophie & technologie',
+                    'about.0.h4': 'Parcours académique',
+                    'about.0.p': 'Double Master en Philosophie Contemporaine (Lyon 3 & Bologna). Recherche centrée sur l\'<span class="highlight">IA éthique</span>, l\'<span class="highlight">individuation numérique</span> (Simondon, Stiegler) et la philosophie de la technologie.',
+                    'about.1.h4': 'Tech & Entrepreneuriat',
+                    'about.1.p': 'Développeur full‑stack (RNCP Bac+5) et fondateur de <span class="highlight">TechAndStream</span>. 8 ans dans l\'Armée de Terre m\'ont appris la rigueur, la gestion de crise et le service centré sur l\'humain — désormais appliqués à l\'inclusion numérique.',
+                    'about.2.h4': 'Soin & Accompagnement',
+                    'about.2.p': 'Passionné par l\'<span class="highlight">autonomie numérique</span> des personnes âgées et vulnérables. J\'offre une assistance patiente et pédagogique pour aider à naviguer en ligne avec confiance et sécurité.',
+                    'about.3.h4': 'Ancrage philosophique',
+                    'about.3.p': 'Inspiré par Arendt, Mbembe, Byung‑Chul Han et Stiegler. Mon travail explore la <span class="highlight">responsabilité algorithmique</span>, la pharmacologie des outils numériques et l\'éthique de la surveillance.',
+                    'services.title': 'Services',
+                    'services.subtitle': '· ce que je propose',
+                    'services.0.h4': 'Coaching numérique',
+                    'services.0.p': 'Accompagnement personnalisé pour ordinateurs, tablettes et smartphones. Explications simples, sans jargon.',
+                    'services.1.h4': 'Sécurité & Vie privée',
+                    'services.1.p': 'Apprenez à reconnaître les arnaques, protéger vos données et naviguer en toute sécurité.',
+                    'services.2.h4': 'Consulting philosophique',
+                    'services.2.p': 'Réflexions éthiques sur la tech, l\'IA et la société — pour entreprises, éducateurs et penseurs.',
+                    'services.3.h4': 'Développement Full‑Stack',
+                    'services.3.p': 'Applications web sur mesure, conception d\'API et solutions UX centrées sur vos besoins.',
+                    'search.title': 'Recherche ouverte',
+                    'search.subtitle': '· explorez avec intention',
+                    'search.placeholder': 'Rechercher sur le web …',
+                    'search.button': 'Rechercher',
+                    'search.hint': 'Appuyez sur <kbd>Ctrl</kbd>+<kbd>K</kbd> pour cibler · OpenSearch activé',
+                    'footer': '© 2026 <strong>Kevin Marville</strong> · TechAndStream · techandstream.com · kvnbbg.fr · kvnbbg-creations.io · Tous droits réservés'
+                },
+                en: {
+                    'nav.game': 'Game',
+                    'nav.about': 'About',
+                    'nav.services': 'Services',
+                    'nav.search': 'Search',
+                    'hero.title': 'Brain Singularity',
+                    'hero.tagline': 'Where <strong>philosophy</strong> meets <strong>code</strong> · Mental agility for the digital age.',
+                    'game.title': 'Mental Arcade',
+                    'game.subtitle': '· train your logic',
+                    'game.score': 'SCORE',
+                    'game.best': 'BEST',
+                    'game.combo': 'COMBO',
+                    'game.timer': '⏱',
+                    'about.title': 'About',
+                    'about.subtitle': '· philosophy & technology',
+                    'about.0.h4': 'Academic Path',
+                    'about.0.p': 'Double Master in Contemporary Philosophy (Lyon 3 & Bologna). Research focuses on <span class="highlight">ethical AI</span>, <span class="highlight">digital individuation</span> (Simondon, Stiegler), and the philosophy of technology.',
+                    'about.1.h4': 'Tech & Entrepreneurship',
+                    'about.1.p': 'Full‑stack developer (RNCP Bac+5) and founder of <span class="highlight">TechAndStream</span>. 8 years in the French Army taught me rigour, crisis management, and human‑centred service — now applied to digital inclusion.',
+                    'about.2.h4': 'Care & Support',
+                    'about.2.p': 'Passionate about <span class="highlight">digital autonomy</span> for the elderly and vulnerable. I offer patient, pedagogical assistance to help people navigate the online world with confidence and security.',
+                    'about.3.h4': 'Philosophical Anchoring',
+                    'about.3.p': 'Inspired by Arendt, Mbembe, Byung‑Chul Han, and Stiegler. My work explores <span class="highlight">algorithmic responsibility</span>, the pharmacology of digital tools, and the ethics of surveillance.',
+                    'services.title': 'Services',
+                    'services.subtitle': '· what I offer',
+                    'services.0.h4': 'Digital Coaching',
+                    'services.0.p': 'One‑on‑one guidance for computers, tablets, and smartphones. Simple, jargon‑free explanations.',
+                    'services.1.h4': 'Security & Privacy',
+                    'services.1.p': 'Learn to recognise scams, protect your data, and browse safely with confidence.',
+                    'services.2.h4': 'Philosophical Consulting',
+                    'services.2.p': 'Ethical reflections on tech, AI, and society — for businesses, educators, and thinkers.',
+                    'services.3.h4': 'Full‑Stack Development',
+                    'services.3.p': 'Custom web applications, API design, and UX‑centric solutions tailored to your needs.',
+                    'search.title': 'Open Search',
+                    'search.subtitle': '· explore with intent',
+                    'search.placeholder': 'Search the web …',
+                    'search.button': 'Search',
+                    'search.hint': 'Press <kbd>Ctrl</kbd>+<kbd>K</kbd> to focus · OpenSearch enabled',
+                    'footer': '© 2026 <strong>Kevin Marville</strong> · TechAndStream · techandstream.com · kvnbbg.fr · kvnbbg-creations.io · All rights reserved'
+                }
+            };
+
+            function setLanguage(lang) {
+                currentLang = lang;
+                langBtn.textContent = lang.toUpperCase();
+                localStorage.setItem('lang', lang);
+                // update all elements with data-i18n (textContent)
+                document.querySelectorAll('[data-i18n]').forEach(el => {
+                    const key = el.getAttribute('data-i18n');
+                    if (translations[lang] && translations[lang][key] !== undefined) {
+                        el.textContent = translations[lang][key];
+                    }
+                });
+                // update elements with data-i18n-html (innerHTML)
+                document.querySelectorAll('[data-i18n-html]').forEach(el => {
+                    const key = el.getAttribute('data-i18n-html');
+                    if (translations[lang] && translations[lang][key] !== undefined) {
+                        el.innerHTML = translations[lang][key];
+                    }
+                });
+                // placeholder
+                document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                    const key = el.getAttribute('data-i18n-placeholder');
+                    if (translations[lang] && translations[lang][key] !== undefined) {
+                        el.placeholder = translations[lang][key];
+                    }
+                });
+                // game stats labels are inside spans with data-i18n, already covered
+                // update search button text (not data-i18n, but we can add)
+                const searchBtn = document.querySelector('#searchForm button');
+                if (searchBtn) {
+                    const key = 'search.button';
+                    if (translations[lang] && translations[lang][key]) {
+                        searchBtn.textContent = translations[lang][key];
+                    }
+                }
+                // update brand (maybe)
+                // brand is not i18n, but we can keep it static
+            }
+
+            // load saved language
+            const savedLang = localStorage.getItem('lang');
+            if (savedLang === 'en') setLanguage('en');
+            else setLanguage('fr');
+
+            langBtn.addEventListener('click', () => {
+                const next = currentLang === 'fr' ? 'en' : 'fr';
+                setLanguage(next);
+            });
+
+            // also update game stats labels on language change, but they are already data-i18n
+            // we need to ensure that game stats are re-applied after language change? they are updated via setLanguage.
+
+            // However, the game stats spans have data-i18n, but they also contain the value spans.
+            // The text nodes are replaced, so we need to be careful not to remove the value spans.
+            // Since we use textContent on the parent span, it would overwrite the value spans.
+            // So we must target only the text part. Better: put the label in a separate inner span.
+            // But we already have structure: <span><span data-i18n="game.score">SCORE</span> <span class="val">0</span></span>
+            // The data-i18n is on the inner span, so it's safe.
+            // So we don't touch the parent.
+
+            // Good.
 
             console.log('🧠 Brain Singularity · Kevin Marville · TechAndStream');
             console.log('📊 Best score saved locally.');
