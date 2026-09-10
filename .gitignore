@@ -1,1 +1,39 @@
 node_modules
+
+# Secrets — la ligne de défense qui manquait.
+#
+# Ce fichier tenait en une seule ligne. Rien n'empêchait de commiter un .env,
+# et c'est exactement ce qui est arrivé dans le dépôt « donation » du même
+# compte : la détection de secrets de GitHub l'a signalé à Stripe, qui a
+# suspendu les virements. Un secret entré dans l'historique y reste après la
+# suppression du fichier ; la seule protection qui vaille l'empêche d'entrer.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.keystore
+*.jks
+google-services.json
+credentials.json
+
+# Documents commerciaux — ils nomment un client par nature
+#
+# STUDI/devis.pdf et STUDI/facture.pdf étaient publiés dans ce dépôt PUBLIC.
+# Un devis et une facture portent l'identité du destinataire ; les diffuser
+# expose une personne qui n'a rien demandé.
+STUDI/devis.pdf
+STUDI/facture.pdf
+
+# Support de présentation contenant des visuels non licenciés
+# (aperçu Adobe Stock filigrané, visuel Dribbble, image sociale d'un tiers).
+Docs/Division by Zero*.pdf
+
+# Build et outils
+dist/
+build/
+.expo/
+*.log
+.DS_Store
+.idea/
+.vscode/

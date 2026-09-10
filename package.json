@@ -8,18 +8,17 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "lint": "eslint ./src --fix",
     "format": "prettier --write \"./src/**/*.{js,jsx,json,css}\"",
-    "build": "esbuild app.jsx --bundle --outfile=out.js",
-    "test": "jest"
+    "build": "esbuild app.jsx --bundle --outfile=out.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Kvnbbg/pdf-cv.git"
   },
   "author": "Kevin Josué MARVILLE (kvnbbg)",
-  "license": "ISC",
+  "license": "MPL-2.0",
   "bugs": {
     "url": "https://github.com/Kvnbbg/pdf-cv/issues"
   },
