@@ -17,6 +17,15 @@ For visitors who want to inspect the technical side more closely:
 
 The technical links are optional: the three TechAndStream surfaces remain the main public presentation layer.
 
+## E-book technique et littéraire — Instructions d'utilisation Datacenter
+
+Ce dépôt intègre désormais la documentation de l'e-book **Instructions d'utilisation Datacenter**, une exploration hybride tech IT-ish entre ingénierie système, revue de code et narration littéraire.
+
+- Documentation détaillée : [Docs/Instructions_utilisation_Datacenter_ebook.md](Docs/Instructions_utilisation_Datacenter_ebook.md)
+- Lecture sur Wattpad : [https://www.wattpad.com/story/415649526-instructions-dutilisation-datacenter](https://www.wattpad.com/story/415649526-instructions-dutilisation-datacenter)
+- Interlude mis en avant : [how we get the code reviewed faster](https://www.wattpad.com/1654792689-instructions-d%27utilisation-datacenter-interlude)
+- Articles de diffusion enrichis : dépôt [french-dev-ai-tools](https://github.com/Kvnbbg/french-dev-ai-tools) (public/articles/)
+
 ## Public repository / privacy
 
 This repository is public and may be reviewed by recruiters. Please keep discussions and contributions courteous and professional.
