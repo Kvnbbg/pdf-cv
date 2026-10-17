@@ -5,8 +5,8 @@
   <version>1.0.0</version>
   <properties><maven.compiler.release>21</maven.compiler.release><project.build.sourceEncoding>UTF-8</project.build.sourceEncoding></properties>
   <dependencies>
-    <dependency><groupId>com.rabbitmq</groupId><artifactId>amqp-client</artifactId><version>5.26.0</version></dependency>
-    <dependency><groupId>com.fasterxml.jackson.core</groupId><artifactId>jackson-databind</artifactId><version>2.20.0</version></dependency>
+    <dependency><groupId>com.rabbitmq</groupId><artifactId>amqp-client</artifactId><version>5.33.1</version></dependency>
+    <dependency><groupId>com.fasterxml.jackson.core</groupId><artifactId>jackson-databind</artifactId><version>2.21.5</version></dependency>
     <dependency><groupId>org.slf4j</groupId><artifactId>slf4j-simple</artifactId><version>2.0.17</version></dependency>
   </dependencies>
 </project>
