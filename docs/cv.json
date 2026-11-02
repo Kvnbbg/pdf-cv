@@ -1,0 +1,29 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jsonresume/resume-schema/v1.0.0/schema.json",
+  "basics": {
+    "name": "Kévin Josué Marville",
+    "label": "Développeur Full-Stack Python · Référent technique",
+    "email": "contact@techandstream.com",
+    "url": "https://kvnbbg.github.io/pdf-cv/",
+    "summary": "Développeur Full-Stack (Python/FastAPI, React, PostgreSQL), fort de 8 ans de rigueur opérationnelle (Armée de Terre) reconvertis en compétences techniques. Créateur de TechAndStream (SIREN 993 761 030). Recherche un poste CDI/CDD en développement Full-Stack ou Lead Dev ; missions freelance via Malt.",
+    "location": { "city": "Lyon", "countryCode": "FR" },
+    "profiles": [
+      { "network": "LinkedIn", "username": "kevinmarville", "url": "https://linkedin.com/in/kevinmarville" },
+      { "network": "GitHub", "username": "Kvnbbg", "url": "https://github.com/Kvnbbg" },
+      { "network": "Malt", "username": "kevinmarville", "url": "https://www.malt.fr/profile/kevinmarville" }
+    ]
+  },
+  "work": [
+    { "name": "TechAndStream", "position": "Développeur Full-Stack & fondateur (entrepreneur individuel)", "url": "https://www.techandstream.com" }
+  ],
+  "skills": [
+    { "name": "Langages", "keywords": ["Python", "JavaScript", "TypeScript", "SQL", "Bash", "Dart"] },
+    { "name": "Frameworks", "keywords": ["FastAPI", "React.js", "Vue.js", "Node.js", "Flask", "Flutter"] },
+    { "name": "Bases de données", "keywords": ["PostgreSQL", "Azure SQL Server", "MySQL", "Redis", "Supabase"] },
+    { "name": "DevOps / Cloud", "keywords": ["Docker", "Git/CI-CD", "Cloudflare", "Vercel", "Linux", "Nginx"] },
+    { "name": "Sécurité", "keywords": ["OWASP", "Tests de pénétration", "RGPD", "Cyber-défense"] },
+    { "name": "Méthodologie", "keywords": ["Agile/Scrum", "DRY", "SOLID", "Spécifications fonctionnelles"] },
+    { "name": "ERP / Support", "keywords": ["Administration ERP", "Support N1-N2", "Formation utilisateurs"] }
+  ],
+  "meta": { "canonical": "https://kvnbbg.github.io/pdf-cv/cv.json", "version": "2026", "lastModified": "2026-11-02" }
+}
