@@ -37,3 +37,20 @@ build/
 .DS_Store
 .idea/
 .vscode/
+
+# Données personnelles — dépôt PUBLIC, servi par GitHub Pages (docs/)
+#
+# 25/11/2026 : la lettre de motivation publiait l'adresse postale complète
+# (rue, porte, code postal) et le CV académique L2 le téléphone personnel.
+# Les diplômes portent la date et le lieu de naissance : jamais en ligne.
+# Les fichiers restent sur le poste ; seules des versions caviardées
+# (e-mail public seulement, ville sans adresse) peuvent être publiées.
+*diplome*valide*.pdf
+*diplomes*valide*.pdf
+Dernier diplome*
+docs/Lettre_motivation_Java_SpringBoot_Kevin_Marville.pdf
+docs/CV_Academique_L2_Lyon3.docx.pdf
+*.prive.pdf
+
+# Cache Expo/Metro : 644 fichiers générés, avec les chemins du poste (/home/…)
+.expo/
